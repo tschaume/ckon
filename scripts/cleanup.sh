@@ -1,6 +1,6 @@
 #!/bin/bash
 set -v
-make distclean
+rm -rf build
 rm Makefile.am
 rm Makefile.in
 rm configure
