@@ -26,21 +26,22 @@ fi
 if [ ! -e Makefile.am ]; then
   echo 'AUTOMAKE_OPTIONS = foreign subdir-objects -Wall' >> Makefile.am
   echo 'ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}' >> Makefile.am
-  echo 'AM_CPPFLAGS = -I$(BOOST_INC)' >> Makefile.am
+  echo 'AM_CPPFLAGS = -I'$BOOST_INC >> Makefile.am
   echo 'bin_PROGRAMS = ckon' >> Makefile.am
-  echo 'ckon_LDFLAGS = -L$(BOOST_LIB) -lstdc++' >> Makefile.am
-  echo 'ckon_LDFLAGS += -lboost_filesystem$(BOOST_SUF)' >> Makefile.am
-  echo 'ckon_LDFLAGS += -lboost_system$(BOOST_SUF)' >> Makefile.am
-  echo 'ckon_LDFLAGS += -lboost_regex$(BOOST_SUF)' >> Makefile.am
+  echo 'ckon_LDFLAGS = -L'$BOOST_LIB' -lstdc++' >> Makefile.am
+  echo 'ckon_LDFLAGS += -lboost_filesystem'$BOOST_SUF >> Makefile.am
+  echo 'ckon_LDFLAGS += -lboost_system'$BOOST_SUF >> Makefile.am
+  echo 'ckon_LDFLAGS += -lboost_regex'$BOOST_SUF >> Makefile.am
   echo 'ckon_SOURCES =' >> Makefile.am
-  for file in `find src -type f`; do
+  for file in `find src -type f -name "*.h" -o -name "*.cc"`; do
     echo "ckon_SOURCES += $file" >> Makefile.am
   done
 fi
 
 autoreconf --force --install
+mkdir -v build
 
 echo "****************************************************"
-echo "run ./configure now. Use --prefix for local install."
+echo "run configure script in build/ now. Use --prefix for local install."
 echo "then, GNU-style make (-j4) && make install."
 echo "****************************************************"
