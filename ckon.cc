@@ -198,13 +198,15 @@ int main(int argc, char *argv[]) {
 	    if ( clopts.bVerbose ) {
 	      cout << "   class \"" << (*c).first << "\" found at: " << (*c).second << endl;
 	    }
-	    classes.push_back((*c).first);
+	    if ( find(classes.begin(),classes.end(),(*c).first) == classes.end() )
+	      classes.push_back((*c).first);
 	  }
 	  for ( map_type::iterator c = mn.begin(); c != mn.end(); ++c ) {
 	    if ( clopts.bVerbose ) {
 	      cout << "   namespace \"" << (*c).first << "\" found at: " << (*c).second << endl;
 	    }
-	    namespaces.push_back((*c).first);
+	    if ( find(namespaces.begin(),namespaces.end(),(*c).first) == namespaces.end() )
+	      namespaces.push_back((*c).first);
 	  }
 	}
       }
