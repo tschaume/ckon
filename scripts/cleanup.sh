@@ -8,6 +8,4 @@ rm configure.ac
 rm aclocal.m4
 rm -rf autom4te.cache
 rm -rf config
-rm -rf src/.deps
-rm -rf src/options/.deps
-rm -rf src/yaml-cpp/.deps
+find StRoot -type f -name ".deps" | xargs rm

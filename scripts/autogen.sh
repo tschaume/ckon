@@ -33,7 +33,7 @@ if [ ! -e Makefile.am ]; then
   echo 'ckon_LDFLAGS += -lboost_system'$BOOST_SUF >> Makefile.am
   echo 'ckon_LDFLAGS += -lboost_regex'$BOOST_SUF >> Makefile.am
   echo 'ckon_SOURCES =' >> Makefile.am
-  for file in `find src -type f -name "*.h" -o -name "*.cc"`; do
+  for file in `find StRoot -type f -name "*.h" -o -name "*.cc" -o -name "*.cxx"`; do
     echo "ckon_SOURCES += $file" >> Makefile.am
   done
 fi
