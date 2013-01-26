@@ -31,7 +31,7 @@ string ckon_prog_subdir = "programs";
 string ckon_build_dir = "build";
 string ckon_install_dir = ckon_build_dir;
 
-#include "src/yaml-cpp/inc/yaml.h"
+#include "StRoot/yaml-cpp/inc/yaml.h"
 #include "clopts.h"
 #include "clean.h"
 #include "regex_search.h"

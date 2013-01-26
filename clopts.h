@@ -1,4 +1,4 @@
-#include "src/options/options.h"
+#include "StRoot/Options/Options.h"
 
 const char * optv[] = {
   "v|verbose",
