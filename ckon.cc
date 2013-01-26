@@ -55,10 +55,8 @@ const char ckon_usage_string[] =
 "\n"
 "the following options are implemented to temporarily overwrite yaml config:\n"
 "(to include them permanently run 'ckon setup')\n"
-"[-p|--pythia] [-y|--yaml] [-r|--roofit]\n"
-"[-s|--suffix] [-d|--doxygen]\n"
+"[-p|--pythia] [-r|--roofit] [-s|--suffix] [-d|--doxygen]\n"
 "-p         	link with pythia library\n"
-"-y         	link with yaml library\n"
 "-r         	link with roofit library\n"
 "-s		Add suffix + at the end of classname in LinkDef file\n"
 "-d		run doxygen (not implemented)\n";
@@ -315,7 +313,6 @@ int main(int argc, char *argv[]) {
 	out << "bin_" << prog_name;
 	out << "_LDADD += -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ @LIBS@" << endl;
 	out << "bin_" << prog_name << "_LDADD += -ldl -lSpectrum" << endl;
-	if ( clopts.bYaml ) out << "bin_" << prog_name << "_LDADD += -lyaml-cpp" << endl;
 	if ( clopts.bRooFit )
 	  out << "bin_" << prog_name << "_LDADD += -lRooFit -lRooFitCore -lMinuit" << endl;
 	if ( clopts.bPythia )

@@ -4,7 +4,6 @@ const char * optv[] = {
   "v|verbose",
   "j:ncpu <ncpu>",
   "p|pythia",
-  "y|yaml",
   "r|roofit",
   "s|suffix",
   "d|doxygen",
@@ -17,7 +16,6 @@ struct ClOpts {
   bool bClean;
   bool bInstall;
   bool bPythia;
-  bool bYaml;
   bool bRooFit;
   bool bSuffix;
   bool bDoxygen;
@@ -28,7 +26,7 @@ struct ClOpts {
   void init() {
     bHelp = false; bVerbose = false;
     bClean = false; bInstall = false; bPythia = true;
-    bYaml = true; bRooFit = true; bSuffix = true;
+    bRooFit = true; bSuffix = true;
     bDoxygen = false; nCpu = 1; bSetup = false;
   }
   bool isCmd(string argstr) { 
@@ -93,7 +91,6 @@ struct ClOpts {
     // set & print default OptionsMap (build options)
     cout << "----------------------" << endl;
     OptionsMap["pythia"] = bPythia;
-    OptionsMap["yamlcpp"] = bYaml;
     OptionsMap["roofit"] = bRooFit;
     OptionsMap["suffix"] = bSuffix;
     OptionsMap["doxygen"] = bDoxygen;
@@ -192,7 +189,6 @@ struct ClOpts {
       // more permanent options
       YAML::Node nOpts(config.at(1));
       bPythia = nOpts["pythia"].as<int>();
-      bYaml = nOpts["yamlcpp"].as<int>();
       bRooFit = nOpts["roofit"].as<int>();
       bSuffix = nOpts["suffix"].as<int>();
       bDoxygen = nOpts["doxygen"].as<int>();
@@ -214,10 +210,6 @@ struct ClOpts {
       case 'p' :
 	bPythia = true;
 	printf("-p: link with pythia library\n");
-	break;
-      case 'y' :
-	bYaml = true;
-	printf("-y: link with yaml library\n");
 	break;
       case 'r' :
 	bRooFit = true;
