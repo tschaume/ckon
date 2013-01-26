@@ -147,21 +147,23 @@ int main(int argc, char *argv[]) {
 
     // get list of all header, source and prog files in current subdir
     vector<fs::path> headers, sources, progs;
-    for ( fs::directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
+    for ( fs::recursive_directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
       fs::path p((*dir).path());
       if ( fs::is_directory(p) ) {
-	// get list of program names in current subdir
-	if ( p.filename().compare(ckon_prog_subdir) == 0 ) {
-	  for ( fs::directory_iterator pdir_end, pdir(p); pdir != pdir_end; ++pdir ) {
-	    if ( (*pdir).path().extension().compare(".cc") == 0 ) progs.push_back(*pdir);
-	  }
-	  continue;
-	}
+	if ( p.filename().compare(ckon_prog_subdir) == 0 ) continue;
 	if ( p.filename().compare(ckon_macro_subdir) == 0 ) continue;
       }
       if ( p.filename().compare("LinkDef.h") == 0 ) continue;
       if ( p.extension().compare(".h") == 0 ) headers.push_back(p);
       if ( p.extension().compare(".cxx") == 0 ) sources.push_back(p);
+    }
+    for ( fs::directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
+      fs::path p((*dir).path());
+      if ( fs::is_directory(p) && p.filename().compare(ckon_prog_subdir) == 0 ) {
+	for ( fs::directory_iterator pdir_end, pdir(p); pdir != pdir_end; ++pdir ) {
+	  if ( (*pdir).path().extension().compare(".cc") == 0 ) progs.push_back(*pdir);
+	}
+      }
     }
 
     // check time stamp for linkdef file
