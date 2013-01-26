@@ -23,6 +23,21 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char *argv[]) {
 
+  // generate ios header file for CINT to avoid loading <cwchar>
+  // see http://root.cern.ch/phpBB3/viewtopic.php?f=3&t=2399
+  // issue came up when compiling YamlCpp via rootcint
+  const char* hpth = getenv("HOME");
+  fs::path ioshdr(hpth);
+  ioshdr /= ".cint_only/ios";
+  if ( !fs::exists(ioshdr) ) {
+    fs::create_directory(ioshdr.parent_path());
+    fs::ofstream ioshdr_out;
+    ioshdr_out.open(ioshdr);
+    ioshdr_out << "// ios header file for CINT" << endl;
+    ioshdr_out << "#include <iosfwd>" << endl;
+    ioshdr_out.close();
+  }
+
   try { 
 
     // init utils
@@ -217,7 +232,7 @@ int main(int argc, char *argv[]) {
 	  out << dict.string() << ": ";
 	  BOOST_FOREACH( fs::path p, headers ) { out << p.string() << " "; }
 	  out << linkdef.string() << endl;
-	  out << "\t rootcint -f $@ -p -c $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^" << endl;
+	  out << "\t rootcint -f $@ -p -I$(HOME)/.cint_only -c $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^" << endl;
 	  out << endl;
 	}
 
