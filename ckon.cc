@@ -28,6 +28,7 @@ string ckon_core_dir = "MyCore";
 string ckon_obsolete_dir = "Obsolete";
 string ckon_exclSuffix = "Gnuplot Options";
 string ckon_prog_subdir = "programs";
+string ckon_macro_subdir = "macros";
 string ckon_build_dir = "build";
 string ckon_install_dir = ckon_build_dir;
 
@@ -154,8 +155,9 @@ int main(int argc, char *argv[]) {
 	  for ( fs::directory_iterator pdir_end, pdir(p); pdir != pdir_end; ++pdir ) {
 	    if ( (*pdir).path().extension().compare(".cc") == 0 ) progs.push_back(*pdir);
 	  }
+	  continue;
 	}
-	continue;
+	if ( p.filename().compare(ckon_macro_subdir) == 0 ) continue;
       }
       if ( p.filename().compare("LinkDef.h") == 0 ) continue;
       if ( p.extension().compare(".h") == 0 ) headers.push_back(p);

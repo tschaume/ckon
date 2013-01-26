@@ -81,6 +81,7 @@ struct ClOpts {
     DirsMap["ckon_core_dir"] = ckon_core_dir;
     DirsMap["ckon_obsolete_dir"] = ckon_obsolete_dir;
     DirsMap["ckon_prog_subdir"] = ckon_prog_subdir;
+    DirsMap["ckon_macro_subdir"] = ckon_macro_subdir;
     DirsMap["ckon_build_dir"] = ckon_build_dir;
     DirsMap["ckon_install_dir"] = ckon_install_dir;
     DirsMap["ckon_exclSuffix"] = ckon_exclSuffix;
@@ -183,6 +184,7 @@ struct ClOpts {
       ckon_core_dir = nDirs["ckon_core_dir"].as<string>();
       ckon_obsolete_dir = nDirs["ckon_obsolete_dir"].as<string>();
       ckon_prog_subdir = nDirs["ckon_prog_subdir"].as<string>();
+      ckon_macro_subdir = nDirs["ckon_macro_subdir"].as<string>();
       ckon_build_dir = nDirs["ckon_build_dir"].as<string>();
       ckon_install_dir = nDirs["ckon_install_dir"].as<string>();
       ckon_exclSuffix = nDirs["ckon_exclSuffix"].as<string>();
