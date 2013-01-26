@@ -217,7 +217,7 @@ int main(int argc, char *argv[]) {
 	  out << dict.string() << ": ";
 	  BOOST_FOREACH( fs::path p, headers ) { out << p.string() << " "; }
 	  out << linkdef.string() << endl;
-	  out << "\t rootcint -f $@ -c $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^" << endl;
+	  out << "\t rootcint -f $@ -p -c $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^" << endl;
 	  out << endl;
 	}
 
