@@ -50,7 +50,11 @@ struct ClOpts {
     OptionsMap[key] = (askYesOrNo(key)=='y') ? 1 : 0;
   }
   bool checkDirName(string key) {
-    if ( key.compare("ckon_exclSuffix") != 0 || key.compare("ckon_NoRootCint") != 0 ) {
+    if (
+	key.compare("ckon_exclSuffix") != 0 ||
+	key.compare("ckon_NoRootCint") != 0 ||
+	key.compare("ckon_DontScan") != 0
+       ) {
       return boost::all(DirsMap[key],boost::is_alnum());
     }
     return boost::all(DirsMap[key],boost::is_alnum()||boost::is_space());
@@ -85,6 +89,7 @@ struct ClOpts {
     DirsMap["ckon_build_dir"] = ckon_build_dir;
     DirsMap["ckon_install_dir"] = ckon_install_dir;
     DirsMap["ckon_exclSuffix"] = ckon_exclSuffix;
+    DirsMap["ckon_DontScan"] = ckon_DontScan;
     DirsMap["ckon_NoRootCint"] = ckon_NoRootCint;
     cout << "default directory structure:" << endl;
     cout << "----------------------------" << endl;
@@ -189,6 +194,7 @@ struct ClOpts {
       ckon_build_dir = nDirs["ckon_build_dir"].as<string>();
       ckon_install_dir = nDirs["ckon_install_dir"].as<string>();
       ckon_exclSuffix = nDirs["ckon_exclSuffix"].as<string>();
+      ckon_DontScan = nDirs["ckon_DontScan"].as<string>();
       ckon_NoRootCint = nDirs["ckon_NoRootCint"].as<string>();
       // more permanent options
       YAML::Node nOpts(config.at(1));

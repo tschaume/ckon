@@ -27,6 +27,7 @@ string ckon_src_dir = "StRoot";
 string ckon_core_dir = "MyCore";
 string ckon_obsolete_dir = "Obsolete";
 string ckon_exclSuffix = "Gnuplot Options";
+string ckon_DontScan = "dat-files database";
 string ckon_NoRootCint = "YamlCpp";
 string ckon_prog_subdir = "programs";
 string ckon_macro_subdir = "macros";
@@ -151,8 +152,10 @@ int main(int argc, char *argv[]) {
     for ( fs::recursive_directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
       fs::path p((*dir).path());
       if ( fs::is_directory(p) ) {
-	if ( p.filename().compare(ckon_prog_subdir) == 0 ) continue;
-	if ( p.filename().compare(ckon_macro_subdir) == 0 ) continue;
+	if ( p.filename().compare(ckon_prog_subdir) == 0 ) dir.no_push();
+	if ( p.filename().compare(ckon_macro_subdir) == 0 ) dir.no_push();
+	if ( p.filename().compare(".git") == 0 ) dir.no_push();
+	if ( ckon_DontScan.find(p.filename().string()) != string::npos ) dir.no_push();
       }
       if ( p.filename().compare("LinkDef.h") == 0 ) continue;
       if ( p.extension().compare(".h") == 0 ) headers.push_back(p);
