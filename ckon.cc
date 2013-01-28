@@ -27,6 +27,7 @@ string ckon_src_dir = "StRoot";
 string ckon_core_dir = "MyCore";
 string ckon_obsolete_dir = "Obsolete";
 string ckon_exclSuffix = "Gnuplot Options";
+string ckon_NoRootCint = "YamlCpp";
 string ckon_prog_subdir = "programs";
 string ckon_macro_subdir = "macros";
 string ckon_build_dir = "build";
@@ -298,15 +299,17 @@ int main(int argc, char *argv[]) {
       BOOST_FOREACH( fs::path p, sources_range ) {
 	out << "lib_lib" << libname << "_la_SOURCES += " << p.string() << endl;
       }
-      fs::path dict(sd);
-      dict /= libname; dict += "_Dict.C";
-      out << "nodist_lib_lib" << libname << "_la_SOURCES = " << dict.string() << endl;
-      out << "lib_lib" << libname << "_la_LIBADD = @ROOTLIBS@" << endl;
-      out << dict.string() << ": ";
-      BOOST_FOREACH( fs::path p, headers ) { out << p.string() << " "; }
-      out << linkdef.string() << endl;
-      out << "\t rootcint -f $@ -c $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^" << endl;
-      out << endl;
+      if ( ckon_NoRootCint.find(sd.filename().string()) == string::npos ) { // no dict if requested
+	fs::path dict(sd);
+	dict /= libname; dict += "_Dict.C";
+	out << "nodist_lib_lib" << libname << "_la_SOURCES = " << dict.string() << endl;
+	out << "lib_lib" << libname << "_la_LIBADD = @ROOTLIBS@" << endl;
+	out << dict.string() << ": ";
+	BOOST_FOREACH( fs::path p, headers ) { out << p.string() << " "; }
+	out << linkdef.string() << endl;
+	out << "\t rootcint -f $@ -c $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^" << endl;
+	out << endl;
+      }
 
       BOOST_FOREACH( fs::path p, progs ) { 
 	string prog_name = p.stem().string();
