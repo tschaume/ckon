@@ -58,10 +58,11 @@ const char ckon_usage_string[] =
 "\n"
 "the following options are implemented to temporarily overwrite yaml config:\n"
 "(to include them permanently run 'ckon setup')\n"
-"[-p|--pythia] [-r|--roofit] [-s|--suffix] [-d|--doxygen]\n"
+"[-p|--pythia] [-r|--roofit] [-s|--suffix] [-d|--doxygen] [-b|--boost]\n"
 "-p         	link with pythia library\n"
 "-r         	link with roofit library\n"
 "-s		Add suffix + at the end of classname in LinkDef file\n"
+"-b             include BOOST_INC and BOOST_LIB\n"
 "-d		run doxygen (not implemented)\n";
 
 double compareTimeStamps(fs::path f2, fs::path f1) {
@@ -126,7 +127,8 @@ int main(int argc, char *argv[]) {
     top_out << "AUTOMAKE_OPTIONS = foreign subdir-objects -Wall" << endl;
     top_out << "ROOTINCLUDE = @ROOTINCLUDES@" << endl;
     top_out << "AM_CPPFLAGS = -I. -I$(srcdir) -I$(pkgincludedir) ";
-    top_out << "-I$(ROOTINCLUDE) -I/opt/local/include" << endl;
+    if ( clopts.bBoost ) top_out << "-I$(BOOST_INC) ";
+    top_out << "-I$(ROOTINCLUDE)" << endl;
     top_out << "bin_PROGRAMS = " << endl;
   }
 
@@ -324,6 +326,7 @@ int main(int argc, char *argv[]) {
 	}
 	out << "bin_" << prog_name;
 	out << "_LDADD += -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ @LIBS@" << endl;
+	if ( clopts.bBoost ) out << "bin_" << prog_name << "_LDADD += -L$(BOOST_LIB)" << endl;
 	out << "bin_" << prog_name << "_LDADD += -ldl -lSpectrum" << endl;
 	if ( clopts.bRooFit )
 	  out << "bin_" << prog_name << "_LDADD += -lRooFit -lRooFitCore -lMinuit" << endl;

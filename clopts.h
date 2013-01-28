@@ -5,6 +5,7 @@ const char * optv[] = {
   "j:ncpu <ncpu>",
   "p|pythia",
   "r|roofit",
+  "b|boost",
   "s|suffix",
   "d|doxygen",
   NULL
@@ -20,13 +21,14 @@ struct ClOpts {
   bool bSuffix;
   bool bDoxygen;
   bool bSetup;
+  bool bBoost;
   int nCpu;
   map <string, int> OptionsMap;
   map <string, string> DirsMap;
   void init() {
     bHelp = false; bVerbose = false;
     bClean = false; bInstall = false; bPythia = true;
-    bRooFit = true; bSuffix = true;
+    bBoost = true; bRooFit = true; bSuffix = true;
     bDoxygen = false; nCpu = 1; bSetup = false;
   }
   bool isCmd(string argstr) { 
@@ -99,6 +101,7 @@ struct ClOpts {
     cout << "----------------------" << endl;
     OptionsMap["pythia"] = bPythia;
     OptionsMap["roofit"] = bRooFit;
+    OptionsMap["boost"] = bBoost;
     OptionsMap["suffix"] = bSuffix;
     OptionsMap["doxygen"] = bDoxygen;
     cout << "default build options:" << endl;
@@ -200,6 +203,7 @@ struct ClOpts {
       YAML::Node nOpts(config.at(1));
       bPythia = nOpts["pythia"].as<int>();
       bRooFit = nOpts["roofit"].as<int>();
+      bBoost = nOpts["boost"].as<int>();
       bSuffix = nOpts["suffix"].as<int>();
       bDoxygen = nOpts["doxygen"].as<int>();
     }
@@ -224,6 +228,10 @@ struct ClOpts {
       case 'r' :
 	bRooFit = true;
 	printf("-r: link with RooFit library\n");
+	break;
+      case 'b' :
+	bBoost = true;
+	printf("-b: include BOOST_INC and BOOST_LIB\n");
 	break;
       case 's' :
 	bSuffix = true;
