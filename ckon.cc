@@ -65,18 +65,57 @@ const char ckon_usage_string[] =
 "-b             include BOOST_INC and BOOST_LIB\n"
 "-d		run doxygen (not implemented)\n";
 
-double compareTimeStamps(fs::path f2, fs::path f1) {
+double compareTimeStamps(const fs::path& f2, const fs::path& f1) {
   time_t t1 = fs::last_write_time(f1);
   time_t t2 = fs::last_write_time(f2);
   return difftime(t2,t1); // t2 - t1 in seconds
 }
 
-bool checkTimeStamp(fs::path file, vector<fs::path> filelist) {
+bool checkTimeStamp(const fs::path& file, vector<fs::path> filelist) {
   BOOST_FOREACH( fs::path p, filelist ) {
     if ( compareTimeStamps(p,file) > 0 ) return false;
   }
   return true;
 }
+
+map_type getIndexMap(const fs::path& p) {
+  string text;
+  fs::ifstream in(p);
+  load_file(text,in);
+  in.close();
+  map_type m;
+  IndexObjects(m,text); // default searches for includes
+  return m;
+}
+
+string getLibString(const fs::path& p) {
+  return " lib/lib" + p.stem().string() + ".la";
+}
+
+void parseIncludes(const fs::path& p, string& cls, const fs::path& csd) {
+
+  if ( clopts.bVerbose ) cout << "Processing file " << p << endl;
+  // find includes
+  map_type mi = getIndexMap(p);
+  // compare to subdir, fill core_lib_string
+  for ( map_type::iterator i = mi.begin(); i != mi.end(); ++i ) {
+    fs::path fndIncl((*i).first);
+    if ( fndIncl.string().find(csd.string()) != string::npos ) {
+      parseIncludes(fndIncl,cls,csd);// check fndIncl for further includes recursively
+    }
+    else if ( fndIncl.parent_path().empty() ) {
+      fs::path fndSameDirIncl(csd);
+      fndSameDirIncl /= fndIncl;
+      parseIncludes(fndSameDirIncl,cls,csd);
+    }
+    else if ( cls.find(getLibString(fndIncl)) == string::npos ) {
+      if ( clopts.bVerbose ) cout << "  link hdr: " << fndIncl << endl;
+      cls += getLibString(fndIncl);
+    }
+  }
+
+}
+
 
 int main(int argc, char *argv[]) {
 
@@ -256,30 +295,9 @@ int main(int argc, char *argv[]) {
     string oprnd = " = ";
     if ( redoMakefile ) {
 
-      // generate string of all core libraries for bin_<prog_name>_LDADD
+      // generate string of all libraries to be linked for bin_<prog_name>_LDADD
       map<fs::path,string> core_lib_string; // one string for each program
-      BOOST_FOREACH( fs::path p, progs ) {
-	if ( clopts.bVerbose ) cout << "Processing file " << p << endl;
-	string text;
-	fs::ifstream in(p);
-	load_file(text,in);
-	in.close();
-	map_type mi;
-	IndexObjects(mi,text); // default searches for includes
-	for ( map_type::iterator i = mi.begin(); i != mi.end(); ++i ) {
-	  if ( clopts.bVerbose ) {
-	    cout << " < " << (*i).first << " > found at: " << (*i).second << endl;
-	  }
-	  // compare to subdir, fill tmp string
-	  fs::path fndHdr((*i).first); // found header
-	  if ( fndHdr.parent_path().compare(sd) == 0 ) continue;
-	  if ( clopts.bVerbose ) cout << "  link hdr: " << fndHdr << endl;
-	  // build core_lib_string string for prog
-	  core_lib_string[p] += " lib/lib";
-	  core_lib_string[p] += fndHdr.parent_path().filename().string();
-	  core_lib_string[p] += ".la";
-	}
-      }
+      BOOST_FOREACH( fs::path p, progs ) { parseIncludes(p,core_lib_string[p],sd); }
 
       if ( clopts.bVerbose ) {
 	BOOST_FOREACH( fs::path p, progs ) {
