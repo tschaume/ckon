@@ -73,3 +73,41 @@ void load_file(std::string& s, std::istream& is) {
   }
 }
 
+map_type getIndexMap(const fs::path& p) {
+  string text;
+  fs::ifstream in(p);
+  load_file(text,in);
+  in.close();
+  map_type m;
+  IndexObjects(m,text); // default searches for includes
+  return m;
+}
+
+string getLibString(const fs::path& p) {
+  return " lib/lib" + p.stem().string() + ".la";
+}
+
+void parseIncludes(const fs::path& p, string& cls, const fs::path& csd) {
+
+  //if ( clopts.bVerbose ) cout << "Processing file " << p << endl;
+  // find includes
+  map_type mi = getIndexMap(p);
+  // compare to subdir, fill core_lib_string
+  for ( map_type::iterator i = mi.begin(); i != mi.end(); ++i ) {
+    fs::path fndIncl((*i).first);
+    if ( fndIncl.string().find(csd.string()) != string::npos ) {
+      parseIncludes(fndIncl,cls,csd);// check fndIncl for further includes recursively
+    }
+    else if ( fndIncl.parent_path().empty() ) {
+      fs::path fndSameDirIncl(csd);
+      fndSameDirIncl /= fndIncl;
+      parseIncludes(fndSameDirIncl,cls,csd);
+    }
+    else if ( cls.find(getLibString(fndIncl)) == string::npos ) {
+      //if ( clopts.bVerbose ) cout << "  link hdr: " << fndIncl << endl;
+      cls += getLibString(fndIncl);
+    }
+  }
+
+}
+

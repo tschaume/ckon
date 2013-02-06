@@ -3,12 +3,14 @@
 uname
 
 if [ "`uname`" == Darwin ]; then
-  BOOST_INC=/opt/local/include
-  BOOST_LIB=/opt/local/lib
   BOOST_SUF=-mt
 fi
 echo "BOOST_INC = $BOOST_INC"
 echo "BOOST_LIB = $BOOST_LIB"
+if [ -z "$BOOST_LIB" -o -z "$BOOST_INC" ]; then
+  echo "set BOOST env!"
+  exit
+fi
 
 # configure.ac
 if [ ! -e configure.ac ]; then
@@ -32,8 +34,9 @@ if [ ! -e Makefile.am ]; then
   echo 'ckon_LDFLAGS += -lboost_filesystem'$BOOST_SUF >> Makefile.am
   echo 'ckon_LDFLAGS += -lboost_system'$BOOST_SUF >> Makefile.am
   echo 'ckon_LDFLAGS += -lboost_regex'$BOOST_SUF >> Makefile.am
+  echo 'ckon_LDFLAGS += -lboost_program_options'$BOOST_SUF >> Makefile.am
   echo 'ckon_SOURCES =' >> Makefile.am
-  for file in `find StRoot -type f -name "*.h" -o -name "*.cc" -o -name "*.cxx"`; do
+  for file in `find . -type f -name "*.h" -o -name "*.cc"`; do
     echo "ckon_SOURCES += $file" >> Makefile.am
   done
 fi

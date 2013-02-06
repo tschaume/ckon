@@ -8,4 +8,4 @@ rm configure.ac
 rm aclocal.m4
 rm -rf autom4te.cache
 rm -rf config
-find StRoot -type f -name ".deps" | xargs rm
+find . -type f -name ".deps" | xargs rm
