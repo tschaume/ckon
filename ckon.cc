@@ -78,31 +78,10 @@ int main(int argc, char *argv[]) {
 
 	// get lists of all classes & namespaces for current subdir
 	vector<string> classes, namespaces;
-	for ( fs::directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
-	  if ( fs::is_directory(*dir) ) continue;
-	  fs::path p((*dir).path());
-	  if ( p.filename().compare("LinkDef.h") == 0 ) continue;
-	  if ( p.extension().compare(".h") == 0 ) {
-	    if ( clopts->bVerbose ) cout << "Processing file " << p << endl;
-	    map_type mc = myregex::getIndexMap(p,"class");
-	    map_type mn = myregex::getIndexMap(p,"namespace");
-	    for ( map_type::iterator c = mc.begin(); c != mc.end(); ++c ) {
-	      if ( clopts->bVerbose ) {
-		cout << "   class \"" << (*c).first << "\" found at: " << (*c).second << endl;
-	      }
-	      if ( find(classes.begin(),classes.end(),(*c).first) == classes.end() )
-		classes.push_back((*c).first);
-	    }
-	    for ( map_type::iterator c = mn.begin(); c != mn.end(); ++c ) {
-	      if ( clopts->bVerbose ) {
-		cout << "   namespace \"" << (*c).first << "\" found at: " << (*c).second << endl;
-	      }
-	      if ( find(namespaces.begin(),namespaces.end(),(*c).first) == namespaces.end() )
-		namespaces.push_back((*c).first);
-	    }
-	  }
-	}
+	hlp->push_obj(sd,"class",classes);
+	hlp->push_obj(sd,"namespace",namespaces);
 
+	// write linkdef
 	fs::ofstream out;
 	out.open(linkdef);
 	out << "#ifdef __CINT__" << endl;
@@ -121,6 +100,7 @@ int main(int argc, char *argv[]) {
 	}
 	out << "#endif" << endl;
 	out.close();
+
       }
 
       // check time stamp for makefile_insert

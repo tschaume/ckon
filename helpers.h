@@ -20,6 +20,7 @@ class helpers {
 
     void push_subdirs(vector<fs::path>&);
     void push_src(const fs::path& , vector<fs::path>&, vector<fs::path>&, vector<fs::path>&);
+    void push_obj(const fs::path&, const char*, vector<string>&);
 
 };
 #endif
