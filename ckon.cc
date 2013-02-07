@@ -9,8 +9,6 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/regex.hpp>
-#include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -18,31 +16,26 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
+#include "utils.h"
 #include "cmdline.h"
-#include "regex_search.h"
+#include "helpers.h"
+#include "myregex.h"
 
 int main(int argc, char *argv[]) {
 
   try { 
 
-    // init utils
-    utils* ut = new utils();
-
     // init & parse options & arguments, fill container
     cmdline* clopts = new cmdline();
     if ( !clopts->parse(argc,argv) ) return 0;
 
+    // init helpers w/ command line options
+    helpers* hlp = new helpers(clopts);
+
     // get list of sub-directories in ckon_src_dir/ for which
     // to generate Makefile_insert and LinkDef.h
     vector<fs::path> subdirs; // absolute paths to subdirs
-    for( fs::recursive_directory_iterator dir_end, dir(clopts->ckon_src_dir); dir != dir_end; ++dir ) {
-      fs::path p((*dir).path());
-      if ( p.filename().compare(clopts->ckon_core_dir) != 0 ) { // == ckon_core_dir would return 0 !
-	dir.no_push(); // don't descend into dir
-	if ( !p.filename().compare(clopts->ckon_obsolete_dir) ) continue; // skip ckon_obsolete_dir
-	subdirs.push_back(p);
-      }
-    }
+    hlp->push_subdirs(subdirs);
 
     // if Makefile.am doesn't exist, generate Makefile.am
     bool redoMakefileAm = !fs::exists("Makefile.am");
@@ -103,9 +96,9 @@ int main(int argc, char *argv[]) {
       linkdef /= "LinkDef.h";
       bool redoLinkDef = (
 	  !fs::exists(linkdef) ||
-	  !ut->checkTimeStamp(linkdef,headers) ||
-	  !ut->checkTimeStamp(linkdef,sources) ||
-	  !ut->checkTimeStamp(linkdef,progs)
+	  !utils::checkTimeStamp(linkdef,headers) ||
+	  !utils::checkTimeStamp(linkdef,sources) ||
+	  !utils::checkTimeStamp(linkdef,progs)
 	  );
 
       // write LinkDef.h for current subdir
@@ -119,13 +112,8 @@ int main(int argc, char *argv[]) {
 	  if ( p.filename().compare("LinkDef.h") == 0 ) continue;
 	  if ( p.extension().compare(".h") == 0 ) {
 	    if ( clopts->bVerbose ) cout << "Processing file " << p << endl;
-	    string text;
-	    fs::ifstream in(p);
-	    load_file(text,in);
-	    in.close();
-	    map_type mc, mn;
-	    IndexObjects(mc,text,"class");
-	    IndexObjects(mn,text,"namespace");
+	    map_type mc = myregex::getIndexMap(p,"class");
+	    map_type mn = myregex::getIndexMap(p,"namespace");
 	    for ( map_type::iterator c = mc.begin(); c != mc.end(); ++c ) {
 	      if ( clopts->bVerbose ) {
 		cout << "   class \"" << (*c).first << "\" found at: " << (*c).second << endl;
@@ -168,9 +156,9 @@ int main(int argc, char *argv[]) {
       makefile /= "Makefile_insert";
       bool redoMakefile = (
 	  !fs::exists(makefile) ||
-	  !ut->checkTimeStamp(makefile,headers) ||
-	  !ut->checkTimeStamp(makefile,sources) ||
-	  !ut->checkTimeStamp(makefile,progs)
+	  !utils::checkTimeStamp(makefile,headers) ||
+	  !utils::checkTimeStamp(makefile,sources) ||
+	  !utils::checkTimeStamp(makefile,progs)
 	  );
 
       // write include statement into Makefile.am
@@ -184,7 +172,7 @@ int main(int argc, char *argv[]) {
 
 	// generate string of all libraries to be linked for bin_<prog_name>_LDADD
 	map<fs::path,string> core_lib_string; // one string for each program
-	BOOST_FOREACH( fs::path p, progs ) { parseIncludes(p,core_lib_string[p],sd); }
+	BOOST_FOREACH( fs::path p, progs ) { myregex::parseIncludes(p,core_lib_string[p],sd); }
 
 	if ( clopts->bVerbose ) {
 	  BOOST_FOREACH( fs::path p, progs ) {

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <boost/program_options.hpp>
-#include "utils.h"
 
 using namespace std;
 namespace po = boost::program_options;
@@ -12,9 +11,10 @@ class cmdline {
 
   private:
     string ckon_cmd;
-    utils* ut;
     void purge();
     void runSetup();
+    void writeConfigureAc();
+    void writeAutom4teCfg();
 
   public:
     cmdline();

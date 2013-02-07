@@ -1,5 +1,6 @@
 #include "cmdline.h"
 #include "clean.h"
+#include "utils.h"
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/tee.hpp>
@@ -15,10 +16,7 @@ cmdline::cmdline() :
   ckon_src_dir("StRoot"), ckon_core_dir("MyCore"), ckon_obsolete_dir("Obsolete"),
   ckon_exclSuffix("Gnuplot Options"), ckon_DontScan("dat-files database"),
   ckon_NoRootCint("YamlCpp"), ckon_prog_subdir("programs"), ckon_macro_subdir("macros"),
-  ckon_build_dir("build"), ckon_install_dir("build") 
-{
-  ut = new utils();
-}
+  ckon_build_dir("build"), ckon_install_dir("build") { }
 
 void cmdline::purge() {
   clean clcont(ckon_src_dir);
@@ -29,7 +27,7 @@ void cmdline::runSetup() {
 
   if ( fs::exists(ckon_config_file) || fs::exists("configure.ac") ) {
     cout << ckon_config_file << " or configure.ac already exist(s)!" << endl;
-    if ( ut->askYesOrNo("remove and start over") == 'n' ) return;
+    if ( utils::askYesOrNo("remove and start over") == 'n' ) return;
     fs::remove(ckon_config_file);
     fs::remove("configure.ac");
     fs::remove(".autom4te.cfg");
@@ -57,8 +55,8 @@ void cmdline::runSetup() {
   both << "NoRootCint=" << ckon_NoRootCint << endl;
   both.close();
 
-  ut->writeConfigureAc();
-  ut->writeAutom4teCfg();
+  writeConfigureAc();
+  writeAutom4teCfg();
 
   cout << endl << "setup done. check " << ckon_config_file << endl;
 }
@@ -128,3 +126,40 @@ bool cmdline::parse(int argc, char *argv[]) {
   } 
 
 }
+
+void cmdline::writeConfigureAc() {
+  fs::ofstream cfg_ac;
+  cfg_ac.open("configure.ac");
+  string ckon_ana_name("ana"), ckon_ana_version("0.0");
+  //cout << "set ckon_ana_name : "; getline(cin,ckon_ana_name);
+  //cout << "set ckon_ana_version : "; getline(cin,ckon_ana_version);
+  cfg_ac << "AC_INIT([" << ckon_ana_name << "], [" << ckon_ana_version << "])" << endl;
+  cfg_ac << "m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])" << endl;
+  cfg_ac << "AC_CONFIG_AUX_DIR(config)" << endl;
+  cfg_ac << "m4_pattern_allow([AM_PROG_AR])" << endl;
+  cfg_ac << "m4_ifdef([AM_PROG_AR], [AM_PROG_AR])" << endl;
+  cfg_ac << "AM_INIT_AUTOMAKE([-Wall no-define])" << endl;
+  cfg_ac << "AC_PROG_CXX" << endl;
+  cfg_ac << "AM_PROG_LIBTOOL" << endl;
+  cfg_ac << "ROOTLIBS=`$ROOTSYS/bin/root-config --libs`" << endl;
+  cfg_ac << "ROOTINCLUDES=`$ROOTSYS/bin/root-config --incdir`" << endl;
+  cfg_ac << "ROOTLIBDIR=`$ROOTSYS/bin/root-config --libdir`" << endl;
+  cfg_ac << "ROOTGLIBS=`$ROOTSYS/bin/root-config --glibs`" << endl;
+  cfg_ac << "AC_SUBST(ROOTLIBS)" << endl;
+  cfg_ac << "AC_SUBST(ROOTINCLUDES)" << endl;
+  cfg_ac << "AC_SUBST(ROOTGLIBS)" << endl;
+  cfg_ac << "AC_SUBST(ROOTLIBDIR)" << endl;
+  cfg_ac << "AC_CONFIG_FILES([Makefile])" << endl;
+  cfg_ac << "AC_OUTPUT" << endl;
+  cfg_ac.close();
+}
+
+void cmdline::writeAutom4teCfg() {
+  fs::ofstream atmte;
+  atmte.open(".autom4te.cfg");
+  atmte << "begin-language: \"Autoconf-without-aclocal-m4\"" << endl;
+  atmte << "args: --no-cache" << endl;
+  atmte << "end-language: \"Autoconf-without-aclocal-m4\"" << endl;
+  atmte.close();
+}
+
