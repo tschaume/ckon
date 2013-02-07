@@ -11,12 +11,11 @@ typedef io::tee_device<std::ostream, fs::ofstream> Tee;
 typedef io::stream<Tee> TeeStream;
 
 cmdline::cmdline() : 
-    bHelp(0), bVerbose(0), bInstall(0), bSetup(0), bClean(0), bPythia(1), bBoost(1), bRooFit(1),
-    bSuffix(1), nCpu(1), desc("Options"), ckon_config_file("ckon.cfg"),
-    ckon_src_dir("StRoot"), ckon_core_dir("MyCore"), ckon_obsolete_dir("Obsolete"),
-    ckon_exclSuffix("Gnuplot Options"), ckon_DontScan("dat-files database"),
-    ckon_NoRootCint("YamlCpp"), ckon_prog_subdir("programs"), ckon_macro_subdir("macros"),
-    ckon_build_dir("build"), ckon_install_dir("build") 
+  ckon_cmd(""), ckon_config_file("ckon.cfg"),
+  ckon_src_dir("StRoot"), ckon_core_dir("MyCore"), ckon_obsolete_dir("Obsolete"),
+  ckon_exclSuffix("Gnuplot Options"), ckon_DontScan("dat-files database"),
+  ckon_NoRootCint("YamlCpp"), ckon_prog_subdir("programs"), ckon_macro_subdir("macros"),
+  ckon_build_dir("build"), ckon_install_dir("build") 
 {
   ut = new utils();
 }
@@ -69,16 +68,21 @@ void cmdline::runSetup() {
   cout << endl << "setup done. check " << ckon_config_file << endl;
 }
 
-void cmdline::addopts() {
+bool cmdline::parse(int argc, char *argv[]) {
 
-  desc.add_options() 
-    ("help,h"    , po::bool_switch(&bHelp)    , "show this help") 
+  po::options_description generic("Generic Options"); 
+  generic.add_options() 
+    ("help,h" , po::bool_switch(&bHelp)    , "show this help") 
     ("verbose,v" , po::bool_switch(&bVerbose) , "verbose output")
+    (",j" , po::value<int>(&nCpu) , "call make with option -j <#cores> (parallel compile)")
+    ("ckon_cmd" , po::value<string>(&ckon_cmd)  , "<none> | setup | clean | install");
+
+  po::options_description config("Configuration"); 
+  config.add_options() 
     ("pythia,p"  , po::bool_switch(&bPythia)  , "link with pythia library")
     ("roofit,r"  , po::bool_switch(&bRooFit)  , "link with roofit library")
     ("suffix,s"  , po::bool_switch(&bSuffix)  , "Add suffix + in LinkDef file")
     ("boost,b"   , po::bool_switch(&bBoost)   , "include BOOST_INC and BOOST_LIB")
-    (",j" , po::value<int>(&nCpu) , "call make with option -j <#cores> (parallel compile)")
     ("ckon_config_file"  , po::value<string>(&ckon_config_file)  , "config file name")
     ("ckon_src_dir"      , po::value<string>(&ckon_src_dir)      , "source dir")
     ("ckon_core_dir"     , po::value<string>(&ckon_core_dir)     , "core dir")
@@ -89,53 +93,42 @@ void cmdline::addopts() {
     ("ckon_prog_subdir"  , po::value<string>(&ckon_prog_subdir)  , "programs source dir")
     ("ckon_macro_subdir" , po::value<string>(&ckon_macro_subdir) , "macros subdir")
     ("ckon_build_dir"    , po::value<string>(&ckon_build_dir)    , "build dir")
-    ("ckon_install_dir"  , po::value<string>(&ckon_install_dir)  , "install dir")
-    ("install" , po::bool_switch(&bInstall) , "install program/libraries into target dir")
-    ("setup"   , po::bool_switch(&bSetup) , "run setup to generate ckon.cfg")
-    ("clean"   , po::bool_switch(&bClean) , "clean up everything");
+    ("ckon_install_dir"  , po::value<string>(&ckon_install_dir)  , "install dir");
 
-  posOpts.add("ckon_config_file",1);
-  posOpts.add("ckon_src_dir",1);
-  posOpts.add("ckon_core_dir",1);
-  posOpts.add("ckon_obsolete_dir",1);
-  posOpts.add("ckon_exclSuffix",1);
-  posOpts.add("ckon_DontScan",1);
-  posOpts.add("ckon_NoRootCint",1);
-  posOpts.add("ckon_prog_subdir",1);
-  posOpts.add("ckon_macro_subdir",1);
-  posOpts.add("ckon_build_dir",1);
-  posOpts.add("ckon_install_dir",1);
+  po::options_description allopts; 
+  allopts.add(generic).add(config);
 
-  posOpts.add("install",1); 
-  posOpts.add("setup",1); 
-  posOpts.add("clean",1); 
+  po::positional_options_description posOpts; 
+  posOpts.add("ckon_cmd",1);
 
-}
-
-bool cmdline::parse(int argc, char *argv[]) {
-
-  addopts();
+  po::variables_map vm; 
 
   try { 
 
-    po::store(po::command_line_parser(argc,argv).options(desc).positional(posOpts).run(),vm);
+    po::store(po::command_line_parser(argc,argv).options(allopts).positional(posOpts).run(),vm);
     if ( fs::exists(ckon_config_file) ) {
-      po::store(po::parse_config_file<char>(ckon_config_file.c_str(), desc), vm);
+      po::store(po::parse_config_file<char>(ckon_config_file.c_str(), config), vm);
     }
 
-    if ( bSetup ) { cout << "run setup" << endl; runSetup(); return false; }
-    if ( bClean ) { purge(); return false; }
-    if ( vm.count("help") ) { // --help option  
-      cout << "ckon -- automatic ROOT analyses compiler & linker" << endl << desc << endl; 
+    po::notify(vm); // throws on error, so do after help in case there are any problems 
+
+    if ( bHelp ) { // --help option  
+      cout << "ckon -- automatic ROOT analyses compiler & linker" << endl << allopts << endl; 
       return false; 
     } 
 
-    po::notify(vm); // throws on error, so do after help in case there are any problems 
+    bSetup = !ckon_cmd.compare("setup");
+    bClean = !ckon_cmd.compare("clean");
+    bInstall = !ckon_cmd.compare("install");
+
+    if ( bSetup ) { cout << "run setup" << endl; runSetup(); return false; }
+    if ( bClean ) { purge(); return false; }
+
     return true;
 
   } 
   catch(po::error& e) { 
-    cerr << "ERROR: " << e.what() << endl << endl << desc << endl; 
+    cerr << "ERROR: " << e.what() << endl << endl << generic << endl; 
     return false; 
   } 
 

@@ -11,13 +11,8 @@ namespace po = boost::program_options;
 class cmdline {
 
   private:
-    po::options_description desc; 
-    po::positional_options_description posOpts; 
-    po::variables_map vm; 
-
+    string ckon_cmd;
     utils* ut;
-
-    void addopts();
     void purge();
     void runSetup();
 
