@@ -31,9 +31,9 @@ char utils::askYesOrNo(string question) {
 void utils::writeConfigureAc() {
   fs::ofstream cfg_ac;
   cfg_ac.open("configure.ac");
-  string ckon_ana_name, ckon_ana_version;
-  cout << "set ckon_ana_name : "; getline(cin,ckon_ana_name);
-  cout << "set ckon_ana_version : "; getline(cin,ckon_ana_version);
+  string ckon_ana_name("ana"), ckon_ana_version("0.0");
+  //cout << "set ckon_ana_name : "; getline(cin,ckon_ana_name);
+  //cout << "set ckon_ana_version : "; getline(cin,ckon_ana_version);
   cfg_ac << "AC_INIT([" << ckon_ana_name << "], [" << ckon_ana_version << "])" << endl;
   cfg_ac << "m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])" << endl;
   cfg_ac << "AC_CONFIG_AUX_DIR(config)" << endl;
