@@ -51,45 +51,17 @@ int main(int argc, char *argv[]) {
       top_out << "bin_PROGRAMS = " << endl;
     }
 
-    // generate LinkDef.h and Makefile_insert in all subdirs
-    // *****************************************************
+    // loop all subdirs
     int subdir_cnt = 0;
     BOOST_FOREACH( fs::path sd, subdirs ) {
 
       // check if subdir "empty" (no header files). If so, skip.
-      bool subdir_empty = true;
-      for ( fs::directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
-	if ( (*dir).path().extension().compare(".h") == 0 ) {
-	  subdir_empty = false;
-	  break;
-	}
-      }
-      if ( subdir_empty ) continue;
-
+      if ( utils::isEmptyDir(sd) ) continue;
       if ( clopts->bVerbose ) cout << sd << endl;
 
       // get list of all header, source and prog files in current subdir
       vector<fs::path> headers, sources, progs;
-      for ( fs::recursive_directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
-	fs::path p((*dir).path());
-	if ( fs::is_directory(p) ) {
-	  if ( p.filename().compare(clopts->ckon_prog_subdir) == 0 ) dir.no_push();
-	  if ( p.filename().compare(clopts->ckon_macro_subdir) == 0 ) dir.no_push();
-	  if ( p.filename().compare(".git") == 0 ) dir.no_push();
-	  if ( clopts->ckon_DontScan.find(p.filename().string()) != string::npos ) dir.no_push();
-	}
-	if ( p.filename().compare("LinkDef.h") == 0 ) continue;
-	if ( p.extension().compare(".h") == 0 ) headers.push_back(p);
-	if ( p.extension().compare(".cxx") == 0 ) sources.push_back(p);
-      }
-      for ( fs::directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
-	fs::path p((*dir).path());
-	if ( fs::is_directory(p) && p.filename().compare(clopts->ckon_prog_subdir) == 0 ) {
-	  for ( fs::directory_iterator pdir_end, pdir(p); pdir != pdir_end; ++pdir ) {
-	    if ( (*pdir).path().extension().compare(".cc") == 0 ) progs.push_back(*pdir);
-	  }
-	}
-      }
+      hlp->push_src(sd,headers,sources,progs);
 
       // check time stamp for linkdef file
       fs::path linkdef(sd);

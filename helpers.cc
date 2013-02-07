@@ -16,3 +16,25 @@ void helpers::push_subdirs(vector<fs::path>& subdirs) {
     }
   }
 }
+
+void helpers::push_src(const fs::path& sd,
+    vector<fs::path>& headers, vector<fs::path>& sources, vector<fs::path>& progs
+    ) {
+  for ( fs::recursive_directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
+    fs::path p((*dir).path());
+    if ( fs::is_directory(p) ) {
+      if ( p.filename().compare(mCl->ckon_prog_subdir) == 0 ) {
+	dir.no_push();
+	for ( fs::directory_iterator pdir_end, pdir(p); pdir != pdir_end; ++pdir ) {
+	  if ( (*pdir).path().extension().compare(".cc") == 0 ) progs.push_back(*pdir);
+	}
+      }
+      if ( p.filename().compare(mCl->ckon_macro_subdir) == 0 ) dir.no_push();
+      if ( p.filename().compare(".git") == 0 ) dir.no_push();
+      if ( mCl->ckon_DontScan.find(p.filename().string()) != string::npos ) dir.no_push();
+    }
+    if ( p.filename().compare("LinkDef.h") == 0 ) continue;
+    if ( p.extension().compare(".h") == 0 ) headers.push_back(p);
+    if ( p.extension().compare(".cxx") == 0 ) sources.push_back(p);
+  }
+}

@@ -19,6 +19,7 @@ class utils {
     static double compareTimeStamps(const fs::path&, const fs::path&);
     static bool checkTimeStamp(const fs::path&, vector<fs::path>);
     static char askYesOrNo(const string);
+    static bool isEmptyDir(fs::path&);
 
 };
 #endif

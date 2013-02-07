@@ -28,3 +28,11 @@ char utils::askYesOrNo(const string question) {
   return type;
 }
 
+bool utils::isEmptyDir(fs::path& sd) {
+  for ( fs::directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
+    if ( (*dir).path().extension().compare(".h") == 0 ) {
+      return false;
+    }
+  }
+  return true;
+}

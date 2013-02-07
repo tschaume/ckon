@@ -19,6 +19,7 @@ class helpers {
     virtual ~helpers() {};
 
     void push_subdirs(vector<fs::path>&);
+    void push_src(const fs::path& , vector<fs::path>&, vector<fs::path>&, vector<fs::path>&);
 
 };
 #endif
