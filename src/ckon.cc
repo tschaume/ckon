@@ -10,9 +10,9 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
 
-#include "utils.h"
-#include "cmdline.h"
-#include "helpers.h"
+#include "src/aux/utils.h"
+#include "src/cmdline/cmdline.h"
+#include "src/helpers/helpers.h"
 
 using std::vector;
 using std::string;

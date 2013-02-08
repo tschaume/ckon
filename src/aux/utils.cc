@@ -1,5 +1,5 @@
-#include "utils.h"
-#include "cmdline.h"
+#include "src/aux/utils.h"
+#include "src/cmdline/cmdline.h"
 
 #include <boost/foreach.hpp>
 

@@ -1,4 +1,4 @@
-#include "myregex.h"
+#include "src/aux/myregex.h"
 
 const char* re1 = // possibly leading whitespace:
     "^[[:space:]]*"

@@ -1,4 +1,4 @@
-#include "clean.h"
+#include "src/clean/clean.h"
 
 clean::clean(const std::string& src_dir) {
   for( fs::recursive_directory_iterator dir_end, dir(src_dir); dir != dir_end; ++dir ) {

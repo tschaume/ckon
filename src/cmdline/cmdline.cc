@@ -1,6 +1,6 @@
-#include "cmdline.h"
-#include "clean.h"
-#include "utils.h"
+#include "src/cmdline/cmdline.h"
+#include "src/clean/clean.h"
+#include "src/aux/utils.h"
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/tee.hpp>

@@ -1,6 +1,6 @@
-#include "helpers.h"
-#include "cmdline.h"
-#include "myregex.h"
+#include "src/helpers/helpers.h"
+#include "src/cmdline/cmdline.h"
+#include "src/aux/myregex.h"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>

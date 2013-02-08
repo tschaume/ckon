@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <boost/filesystem.hpp>
-#include "cmdline.h"
+#include "src/cmdline/cmdline.h"
 
 using namespace std;
 namespace fs = boost::filesystem;
