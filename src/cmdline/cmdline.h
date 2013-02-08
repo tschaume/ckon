@@ -29,7 +29,7 @@ class cmdline {
     bool bRooFit;
     bool bSuffix;
     bool bBoost;
-    int nCpu;
+    string nCpu;
     string ckon_config_file;
     string ckon_src_dir;
     string ckon_core_dir;

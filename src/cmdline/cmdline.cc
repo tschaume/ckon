@@ -67,7 +67,7 @@ bool cmdline::parse(int argc, char *argv[]) {
   generic.add_options() 
     ("help,h" , po::bool_switch(&bHelp)    , "show this help") 
     ("verbose,v" , po::bool_switch(&bVerbose) , "verbose output")
-    (",j" , po::value<int>(&nCpu) , "call make with option -j <#cores> (parallel compile)")
+    (",j" , po::value<string>(&nCpu) , "call make with option -j <#cores> (parallel compile)")
     ("ckon_cmd" , po::value<string>(&ckon_cmd)->default_value("")  , "<none> | setup | clean | install");
 
   po::options_description config("Configuration"); 
