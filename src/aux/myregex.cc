@@ -22,7 +22,7 @@ void myregex::IndexObjects(map_type& m, const string& file, const char* obj) {
   end = file.end();
   boost::match_results<string::const_iterator> what;
   boost::match_flag_type flags = boost::match_default;
-  char* r1;
+  char r1[300];
   snprintf(r1, sizeof(r1), "%s%s%s%s%s%s", r1a, r1b, r1c, r1d, r1e, r1f);
   string restr = (obj) ? r1 : r2;
   if ( obj ) boost::replace_all(restr, "REPLACE_W_OBJECT", obj);
