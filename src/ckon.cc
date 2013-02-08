@@ -1,5 +1,4 @@
 // Copyright (c) 2013 Patrick Huck
-
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 
 #include <boost/filesystem.hpp>
@@ -32,7 +31,7 @@ int main(int argc, char *argv[]) {
     // get list of sub-directories in ckon_src_dir/ for which
     // to generate Makefile_insert and LinkDef.h
     vector<fs::path> subdirs;  // absolute paths to subdirs
-    hlp->push_subdirs(subdirs);
+    hlp->push_subdirs(&subdirs);
 
     // if Makefile.am doesn't exist, generate Makefile.am
     bool redoMakefileAm = !fs::exists("Makefile.am");
@@ -55,7 +54,7 @@ int main(int argc, char *argv[]) {
 
       // get list of all header, source and prog files in current subdir
       vector<fs::path> headers, sources, progs;
-      hlp->push_src(headers, sources, progs);
+      hlp->push_src(&headers, &sources, &progs);
 
       // check time stamp for linkdef file
       fs::path linkdef(sd);
@@ -70,8 +69,8 @@ int main(int argc, char *argv[]) {
       if ( redoLinkDef ) {
         // get lists of all classes & namespaces for current subdir
         vector<string> classes, namespaces;
-        hlp->push_obj("class", classes);
-        hlp->push_obj("namespace", namespaces);
+        hlp->push_obj("class", &classes);
+        hlp->push_obj("namespace", &namespaces);
 
         // write linkdef
         fs::ofstream out;
@@ -147,8 +146,8 @@ int main(int argc, char *argv[]) {
 
     cout << "==> build process finished." << endl;
   }
-  catch(const exception& e) {
-    cerr << "Unhandled Exception reached the top of main: "
+  catch(const std::exception& e) {
+    std::cerr << "Unhandled Exception reached the top of main: "
       << e.what() << ", application will now exit" << endl;
     return 1;
   }
