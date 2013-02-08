@@ -1,23 +1,21 @@
-#ifndef clean_h
-#define clean_h
+// Copyright (c) 2013 Patrick Huck
+#ifndef SRC_CLEAN_CLEAN_H_
+#define SRC_CLEAN_CLEAN_H_
 
+#include <boost/filesystem.hpp>
 #include <vector>
 #include <string>
-#include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;
 
 class clean {
-
   private:
     std::vector<std::string> cont;
-    bool isFileNotToDelete (const fs::path&);
+    bool isFileNotToDelete(const fs::path&);
 
   public:
-    clean(const std::string&);
-    virtual ~clean() {};
-    
+    explicit clean(const std::string&);
+    virtual ~clean() {}
     int purge();
-
 };
-#endif
+#endif  // SRC_CLEAN_CLEAN_H_
