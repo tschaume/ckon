@@ -4,8 +4,10 @@
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
+#include <boost/range/sub_range.hpp>
+#include <boost/filesystem/operations.hpp>
 
-helpers::helpers(cmdline* cl) : mCl(cl) { }
+helpers::helpers(cmdline* cl) : mCl(cl), sd_cnt(0) { }
 
 void helpers::push_subdirs(vector<fs::path>& subdirs) {
 
@@ -20,10 +22,7 @@ void helpers::push_subdirs(vector<fs::path>& subdirs) {
 
 }
 
-void helpers::push_src(const fs::path& sd,
-    vector<fs::path>& headers, vector<fs::path>& sources, vector<fs::path>& progs
-    )
-{
+void helpers::push_src(vector<fs::path>& headers, vector<fs::path>& sources, vector<fs::path>& progs) {
 
   for ( fs::recursive_directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
     fs::path p((*dir).path());
@@ -45,7 +44,7 @@ void helpers::push_src(const fs::path& sd,
 
 }
 
-void helpers::push_obj(const fs::path& sd, const char* obj, vector<string>& objv) {
+void helpers::push_obj(const char* obj, vector<string>& objv) {
 
   for ( fs::directory_iterator dir_end, dir(sd); dir != dir_end; ++dir ) {
     if ( fs::is_directory(*dir) ) continue;
@@ -64,4 +63,74 @@ void helpers::push_obj(const fs::path& sd, const char* obj, vector<string>& objv
     }
   }
 
+}
+
+string helpers::writePkgDefs(const fs::path& linkdef, const vector<fs::path>& files) {
+
+  string out = "pkglib_LTLIBRARIES" + oprnd + "lib/lib" + libname + ".la\n";
+  out += "noinst_HEADERS" + oprnd + linkdef.string() + '\n';
+  string mkstr = "pkginclude_HEADERS";
+  return out + printFilesMk(mkstr,files,oprnd);
+}
+
+string helpers::writeLibDefs(const vector<fs::path>& files) {
+
+  string mkstr = "lib_lib" + libname + "_la_SOURCES";
+  return printFilesMk(mkstr,files," = ");
+}
+
+string helpers::printFilesMk(const string& mkstr, vector<fs::path> files, const string& op) {
+
+  string out = mkstr + op + files.front().string() + '\n';
+  boost::sub_range< vector<fs::path> > files_range(files.begin()+1,files.end());
+  BOOST_FOREACH( fs::path p, files_range ) { out += mkstr + " += " + p.string() + '\n'; }
+  return out;
+}
+
+string helpers::writeDict(const fs::path& linkdef, const vector<fs::path>& headers) {
+
+  fs::path dict(sd); dict /= libname; dict += "_Dict.C";
+  string out = "nodist_lib_lib" + libname + "_la_SOURCES = " + dict.string() + '\n';
+  out += "lib_lib" + libname + "_la_LIBADD = @ROOTLIBS@\n";
+  out += dict.string() + ": ";
+  BOOST_FOREACH( fs::path p, headers ) { out += p.string() + " "; }
+  out += linkdef.string() + '\n';
+  out += "\t rootcint -f $@ -c $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^\n";
+  return out + '\n';
+}
+
+void helpers::genCoreLibStr(const fs::path& p) {
+  // generate string of all libraries to be linked for bin_<prog_name>_LDADD
+  myregex::parseIncludes(p,core_lib_string,sd);
+  if ( mCl->bVerbose ) { cout << "core_lib_string: " << core_lib_string << endl; }
+}
+
+string helpers::writeBinProg(const fs::path& p) {
+
+  string prog_name = p.stem().string();
+  string out = "bin_PROGRAMS += bin/" + prog_name + '\n';
+  out += "bin_" + prog_name + "_SOURCES = " + p.string() + '\n';
+  out += "bin_" + prog_name + "_LDADD = lib/lib" + libname + ".la\n";
+  if ( !core_lib_string.empty() )
+    out += "bin_" + prog_name + "_LDADD +=" + core_lib_string + '\n';
+  out += "bin_" + prog_name;
+  out += "_LDADD += -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ @LIBS@\n";
+  if ( mCl->bBoost ) out += "bin_" + prog_name + "_LDADD += -L$(BOOST_LIB)\n";
+  out += "bin_" + prog_name + "_LDADD += -ldl -lSpectrum\n";
+  if ( mCl->bRooFit )
+    out += "bin_" + prog_name + "_LDADD += -lRooFit -lRooFitCore -lMinuit\n";
+  if ( mCl->bPythia )
+    out += "bin_" + prog_name + "_LDADD += -lPhysics -lEG -lEGPythia6\n";
+  out += "bin_" + prog_name + "_LDFLAGS = -R $(ROOTLIBDIR) -L$(ROOTLIBDIR)\n";
+  out += "bin_" + prog_name + " = @ROOTCFLAGS@\n";
+  return out;
+}
+
+string helpers::writeMakefileAmHd() {
+  string out = "AUTOMAKE_OPTIONS = foreign subdir-objects -Wall\n";
+  out += "ROOTINCLUDE = @ROOTINCLUDES@\n";
+  out += "AM_CPPFLAGS = -I. -I$(srcdir) -I$(pkgincludedir) ";
+  if ( mCl->bBoost ) out += "-I$(BOOST_INC) ";
+  out += "-I$(ROOTINCLUDE)\n";
+  return out + "bin_PROGRAMS = \n";
 }

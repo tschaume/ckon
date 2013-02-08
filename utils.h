@@ -20,6 +20,7 @@ class utils {
     static bool checkTimeStamp(const fs::path&, vector<fs::path>);
     static char askYesOrNo(const string);
     static bool isEmptyDir(fs::path&);
+    static string writeLinkDefHd();
 
 };
 #endif

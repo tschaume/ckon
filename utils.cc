@@ -36,3 +36,12 @@ bool utils::isEmptyDir(fs::path& sd) {
   }
   return true;
 }
+
+string utils::writeLinkDefHd() {
+  string out = "#ifdef __CINT__\n";
+  out += "#pragma link off all globals;\n";
+  out += "#pragma link off all classes;\n";
+  out += "#pragma link off all functions;\n";
+  out += "#pragma link C++ nestedclasses;\n";
+  return out + "#pragma link C++ nestedtypedefs;\n";
+}
