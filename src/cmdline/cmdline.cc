@@ -7,6 +7,7 @@
 #include "src/aux/utils.h"
 
 using std::cout;
+using std::endl;
 using std::ostream;
 namespace io = boost::iostreams;
 namespace fs = boost::filesystem;
@@ -126,7 +127,7 @@ bool cmdline::parse(int argc, char *argv[]) {
     return true;
   }
   catch(const po::error& e) {
-    cerr << "ERROR: " << e.what() << endl << endl << generic << endl;
+    std::cerr << "ERROR: " << e.what() << endl << endl << generic << endl;
     return false;
   }
 }

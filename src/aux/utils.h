@@ -1,27 +1,24 @@
-#ifndef utils_h
-#define utils_h
+// Copyright (c) 2013 Patrick Huck
+#ifndef SRC_AUX_UTILS_H_
+#define SRC_AUX_UTILS_H_
 
+#include <boost/filesystem.hpp>
 #include <string>
 #include <vector>
-#include <boost/filesystem.hpp>
 
-using namespace std;
 namespace fs = boost::filesystem;
 
 class cmdline;
 
 class utils {
-
   public:
     utils();
-    virtual ~utils(void) {};
+    virtual ~utils(void) {}
 
     static double compareTimeStamps(const fs::path&, const fs::path&);
-    static bool checkTimeStamp(const fs::path&, vector<fs::path>);
-    static char askYesOrNo(const string);
-    static bool isEmptyDir(fs::path&);
-    static string writeLinkDefHd();
-
+    static bool checkTimeStamp(const fs::path&, const std::vector<fs::path>&);
+    static char askYesOrNo(const std::string&);
+    static bool isEmptyDir(const fs::path&);
+    static std::string writeLinkDefHd();
 };
-#endif
-
+#endif  // SRC_AUX_UTILS_H_

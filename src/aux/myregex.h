@@ -1,39 +1,40 @@
-#ifndef myregex_h
-#define myregex_h
+// Copyright (c) 2013 Patrick Huck
+#ifndef SRC_AUX_MYREGEX_H_
+#define SRC_AUX_MYREGEX_H_
 // extended version of
-// http://www.boost.org/doc/libs/1_31_0/libs/regex/example/snippets/regex_search_example.cpp
+// http://www.boost.org/doc/libs/1_31_0/libs/
+//     regex/example/snippets/regex_search_example.cpp
 // purpose:
 // takes the contents of a file in the form of a string
 // and searches for all the C++ class definitions, storing
 // their locations in a map of strings/int's
 
-#include <map>
-#include <string>
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <map>
+#include <string>
+#include <functional>
 
-using namespace std;
+using std::string;
 namespace fs = boost::filesystem;
 
-typedef map < string, string::difference_type, less<string> > map_type;
+typedef std::map < string, string::difference_type, std::less<string> > map_type;
 
 class myregex {
   private:
     static void IndexObjects(map_type&, const string&, const char* obj = NULL);
-    static void load_file(string&, istream&);
+    static void load_file(string&, std::istream&);
     static string getLibString(const fs::path& p) {
       return " lib/lib" + p.stem().string() + ".la";
     }
 
   public:
-    myregex() {};
-    virtual ~myregex() {};
+    myregex() {}
+    virtual ~myregex() {}
 
     static map_type getIndexMap(const fs::path&, const char* obj = NULL);
     static void parseIncludes(const fs::path&, string&, const fs::path&);
-
 };
-#endif
-
+#endif  // SRC_AUX_MYREGEX_H_
