@@ -20,7 +20,7 @@
 using std::string;
 namespace fs = boost::filesystem;
 
-typedef std::map < string, string::difference_type, std::less<string> > map_type;
+typedef std::map< string, string::difference_type, std::less<string> > map_type;
 
 class myregex {
   private:
@@ -35,6 +35,6 @@ class myregex {
     virtual ~myregex() {}
 
     static map_type getIndexMap(const fs::path&, const char* obj = NULL);
-    static void parseIncludes(const fs::path&, string&, const fs::path&);
+    static void parseIncs(const fs::path&, string&, const fs::path&);
 };
 #endif  // SRC_AUX_MYREGEX_H_

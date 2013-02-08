@@ -104,7 +104,7 @@ string helpers::writeDict(const fs::path& linkdef, const vpath& headers) {
 
 void helpers::genCoreLibStr(const fs::path& p) {
   // generate string of all libraries to be linked for bin_<prog_name>_LDADD
-  myregex::parseIncludes(p, core_lib_string, sd);
+  myregex::parseIncs(p, core_lib_string, sd);
   if ( mCl->bVerbose ) {
     std::cout << "core_lib_string: " << core_lib_string << std::endl;
   }
