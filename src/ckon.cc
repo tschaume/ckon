@@ -1,4 +1,4 @@
-// Copyright 2013 Patrick Huck
+// Copyright (c) 2013 Patrick Huck
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 

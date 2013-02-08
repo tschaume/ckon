@@ -1,14 +1,14 @@
-#ifndef cmdline_h
-#define cmdline_h
+// Copyright (c) 2013 Patrick Huck
+#ifndef SRC_CMDLINE_CMDLINE_H_
+#define SRC_CMDLINE_CMDLINE_H_
 
-#include <string>
 #include <boost/program_options.hpp>
+#include <string>
 
-using namespace std;
+using std::string;
 namespace po = boost::program_options;
 
 class cmdline {
-
   private:
     string ckon_cmd;
     void purge();
@@ -18,7 +18,7 @@ class cmdline {
 
   public:
     cmdline();
-    virtual ~cmdline() {};
+    virtual ~cmdline() {}
 
     bool bHelp;
     bool bVerbose;
@@ -43,7 +43,5 @@ class cmdline {
     string ckon_install_dir;
 
     bool parse(int argc, char *argv[]);
-
 };
-#endif
-
+#endif  // SRC_CMDLINE_CMDLINE_H_
