@@ -1,6 +1,7 @@
+// Copyright 2013 Patrick Huck
+
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 
-#include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -9,12 +10,15 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
 
-using namespace std;
-namespace fs = boost::filesystem;
-
 #include "utils.h"
 #include "cmdline.h"
 #include "helpers.h"
+
+using std::vector;
+using std::string;
+using std::cout;
+using std::endl;
+namespace fs = boost::filesystem;
 
 int main(int argc, char *argv[]) {
 
