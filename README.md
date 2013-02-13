@@ -1,92 +1,168 @@
-# ckon - automatic compiler &amp; linker for ROOT analyses
+*ckon* is a small C++ program/tool which automatically takes care of
+compilation, dictionary generation as well linking of ROOT data analyses. This
+includes building the required libraries and scanning/parsing include headers to
+figure out which libraries the main programs need to be linked to. It uses
+automake/autoconf to be platform independent and GNU install compliant.
 
-*ckon* is a small C++ program/tool to automatically take care of compilation,
-  dictionary generation and linking of ROOT 
+### HowTo
 
-## get the code
+#### Generic Options
 
-- for more see the project page at http://tschaume.github.com/ckon
-- MIT License
+Shown below are the generic command line options which can be given to *ckon*.
 
-## ckon
- 
-While developing code for our STAR analyses my colleague Hiroshi Masui and I
-ended up using Autotools to compile, link and organize our classes and programs.
-The setup needed to be easy to work with and had to support the use of CERN’s
-data analysis software ROOT. This would combine the advantages of a standard GNU
-build process with the requirements of a data analysis in Particle and Nuclear
-Physics. Meanwhile, this approach has grown to an analysis tool which might be
-interesting for the many ROOT-using physicists out there who don’t feel like
-writing Makefiles but still want to keep their source directories well organized
-or even want to use the power of a fully compiled program including an options
-parser. On top, an Options class is included which makes compiling programs with
-an option parser possible. The framework provides rules in the Makefile to
-automatically translate doxygen commands and generate html- & pdf-documentation
-(e.g. analyses homepages). The code includes simple example programs and more
-advanced ones showing the usage of Bichsel functions and Gnuplot-C++ within this
-framework. Makefiles and LinkDef’s are generated automatically based on the
-contents in the src/ directory.
+```
+Generic Options:
+        -h [ --help ]         show this help
+        -v [ --verbose ]      verbose output
+        -j arg                call make with option -j <#cores>
+        --ckon_cmd arg        setup | clean | install
+```
 
-### Get the Code
+The long option ```--ckon_cmd``` is implemented as optional positional option
+to run the setup, clean all compilation products (i.e. ```make clean```) and
+globally install libraries and programs (i.e. ```make install```).
 
-There are a couple of options for you to get the code.
+#### Setup
+```$ ckon setup``` generates the files *configure.ac* and *.autom4te.cfg* (both
+autoconf specific, no need for modifications) as well as *ckon.cfg*. Modify
+the latter to resemble your directory structure and linker options.
 
-http://www.star-git.tschaume.com (usual STAR login)
+#### Configuration
+The following options can be set on the command line or preferably in
+*ckon.cfg*.
 
-Our main development we do through bitbucket.org which will always have the
-newest versions. For those of you using bitbucket and/or interested in
-contributing, we could grant read and/or write access to
+```
+Configuration:
+        -p [ --pythia ] arg     link with pythia library
+        -r [ --roofit ] arg     link with roofit library
+        -s [ --suffix ] arg     Add suffix + in LinkDef file
+        -b [ --boost ] arg      include BOOST_INC and BOOST_LIB
+        --ckon.config_file arg  config file [internal use only]
+        --ckon.src_dir arg      source dir
+        --ckon.core_dir arg     core dir [obsolete]
+        --ckon.obsolete_dir arg obsolete dir
+                [put your obsolete code in ckon.src_dir/ckon.obsolete_dir]
+        --ckon.exclSuffix arg   no + suffix in LinkDef.h class pragma
+        --ckon.DontScan arg     no source scan
+                [skip dirs in space-separated list ckon.DontScan during source scan]
+        --ckon.NoRootCint arg   no dictionary
+                [don't generate CINT dictionary for subdirs in space-separated
+                list ckon.NoRootCint]
+        --ckon.prog_subdir arg  progs subdir
+                [ckon.prog_subdir contains the programs for a specific subdir]
+        --ckon.macro_subdir arg macro subdir
+                [obsolete, can be merged with ckon.DontScan]
+        --ckon.build_dir arg    build dir [$ ckon]
+        --ckon.install_dir arg  install dir [$ ckon install]
+```
 
-https://bitbucket.org/potatoclub/templateanalysis
+#### Typical Directory Structure
 
-If you don’t have a bitbucket account but still want to have access via git, use
+Put header and source files for each library into a separate folder in
+```ckon.src_dir```.  Running *ckon* should automagically take the right action
+for the current status of your build directory. Makefiles and LinkDef’s are
+generated automatically based on the contents in the ckon.src_dir directory.  A
+typical directory structure could look as follows - using the current defaults
+for illustration purposes:
 
-git clone http://USER:PWD@star-git.tschaume.com/templateanalysis (usual STAR
-login)
+```
+StRoot
+├── CocktailInputPt
+│   ├── CocktailInputPt.cxx
+│   ├── CocktailInputPt.h
+│   ├── dat-files
+│   └── programs
+│       └── cipt.cc
+├── ElectronPid
+│   ├── BetaPanels.cxx
+│   ├── BetaPanels.h
+│   ├── PureSampleAnalysis.cxx
+│   ├── PureSampleAnalysis.h
+│   ├── SigmaElFitsMaker.cxx
+│   ├── SigmaElFitsMaker.h
+│   ├── SigmaElFitsPlotter.cxx
+│   ├── SigmaElFitsPlotter.h
+│   ├── SigmaElFitsUtils.cxx
+│   ├── SigmaElFitsUtils.h
+│   └── programs
+│       ├── README
+│       ├── beta3sig.cc
+│       ├── dedxCut.cc
+│       ├── nsigparamsGP.cc
+│       └── pureSamp.cc
+├── Gnuplot
+│   ├── Gnuplot.cxx
+│   └── Gnuplot.h
+├── InvMassBgAnalysis
+│   ├── InvMassBgAnalysis.cxx
+│   ├── InvMassBgAnalysis.h
+│   └── programs
+│       ├── invmassBg.cc
+│       └── runCocktail.cc
+├── RunQA
+│   ├── Grubbs.cxx
+│   ├── Grubbs.h
+│   ├── LinFit.cxx
+│   ├── LinFit.h
+│   ├── RunQaHistos.cxx
+│   ├── RunQaHistos.h
+│   └── programs
+│       └── doRunQA.cc
+├── StBadRdosDb
+│   ├── StBadRdosDb.cxx
+│   ├── StBadRdosDb.h
+│   ├── database
+│   │   ├── dbfiles
+│   │   ├── genAll.sh
+│   │   └── genBadRdosDb.pl
+│   └── macros
+│       └── testStBadRdosDb.C
+├── YamlCfgReader
+│   ├── YamlCfgReader.cxx
+│   ├── YamlCfgReader.h
+│   └── config.yml
+```
 
-This is a clone on my private host which should get updated as frequent as
-bitbucket.
+### Get the Code & Install
 
-### References and Talk
+The code is currently not published, yet. I plan to do it soon, though. If you'd like to contribute I'd need to grant you access to my private gitolite-managed repository server. Do the following:
 
-Junior’s Talk at LBNL (2012/11/14)
+- generate a ssh-key pair (no password), name the key-pair <username>(.pub)
+- send the .pub to @tschaume, put the following in ~/.ssh/config
 
-### Build all Source Code & Usage (install)
+        Host=gitolite
+        Hostname=cgit.the-huck.com
+        User=gitolite
+        IdentityFile=~/.ssh/<username>
+        IdentitiesOnly=yes
+- as soon as I added your key, you should be able to check your accessible repos
+via ``` $ ssh gitolite info ```
+- clone *ckon* via ``` $ git clone gitolite:ckon ```
+- to install: ```$ cd ckon; ./installCkon```
 
-Put header and source files for each library into a separate folder in src and
-run ‘kon’. Put files you want to ignore into src/Obsolete. Running ‘kon’ should
-automagically take the right action for the current status of your build
-directory. run “./kon -h” for help about the usage.
+### Appendix
 
-This version should work for most of the daily-work use cases like using macros
-and/or compiled programs. Makefiles and LinkDef’s are generated automatically
-based on the contents in the src/ directory. If you want to call ‘make install’
-a warning is issued asking you to put the according lines for LD_LIBRARY_PATH
-into basrc/cshrc.
+#### Reference Talk about Automake/Autoconf Setup
 
-Example programs have been added to show how to use the STAR Bichsel class and
-how to use Gnuplot from within C. The interface to Gnuplot has been written by
-N. Devillard. see http://code.google.com/p/gnuplot-cpp/
+Talk at Junior's Day of STAR Collaboration Meeting (LBNL, 2012/11/14) [link to be added]
 
-The source code has been taken from the link given above and adapted to the
-current framework. For the programs to run you need to download the files
-uploaded in the Download section of bitbucket:
+#### Software Requirements
 
-### Software Requirements
+The following software and corresponding versions should be installed on your
+system (might not be complete):
 
-m4/1.4.6 autoconf/2.68 automake/1.11.4 libtool/2.4
+- m4/1.4.6
+- autoconf/2.68
+- automake/1.11.4
+- libtool/2.4
+- boost/1.50
 
-### Related Stuff
+#### License & Project Homepage
 
-#### Private ROOT Version from Source
+This software will be published under the MIT License
+(http://opensource.org/licenses/MIT).  
+Project page at http://tschaume.github.com/ckon
 
-``` setenv ROOTSYS ${HOME}/root setenv PATH ${HOME}/root/bin:${PATH} setenv
-LD_LIBRARY_PATH ${HOME}/root/lib:${LD_LIBRARY_PATH} ./configure make -j8 make
-install ```
-
-#### Pythia Support for ROOT
-
-wget ftp://root.cern.ch/root/pythia6.tar.gz changed gfortran to gfortran-mp-4.5
-in makePythia6.macosx64 ./makePythia6.macosx64 # to get libPythia6.so/dylib
-configure ROOT with –with-pythia6-libdir#$HOME/pythia6
-
+#### Authors and Contributors
+Patrick Huck (@tschaume)  
+*invaluable contributions*: Hiroshi Masui
