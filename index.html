@@ -28,26 +28,181 @@
         </ul>
       </header>
       <section>
-        <h3>Welcome to GitHub Pages.</h3>
+        <p><em>ckon</em> is a small C++ program/tool which automatically takes care of
+compilation, dictionary generation as well linking of ROOT data analyses. This
+includes building the required libraries and scanning/parsing include headers to
+figure out which libraries the main programs need to be linked to. It uses
+automake/autoconf to be platform independent and GNU install compliant.</p>
 
-<p>After your page is generated, you can check out the new branch:</p>
+<h3>Get the Code &amp; Install</h3>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p>The code is currently not published, yet. I plan to do it soon, though. If you'd like to contribute I'd need to grant you access to my private gitolite-managed repository server. Do the following:</p>
+
+<ul>
+<li>generate a ssh-key pair (no password), name the key-pair <code>&lt;username&gt;(.pub)</code>
+</li>
+<li>
+<p>send the .pub to <a href="https://github.com/tschaume" class="user-mention">@tschaume</a>, put the following in ~/.ssh/config</p>
+
+<pre><code>Host=gitolite
+Hostname=cgit.the-huck.com
+User=gitolite
+IdentityFile=~/.ssh/&lt;username&gt;
+IdentitiesOnly=yes
+</code></pre>
+</li>
+<li><p>as soon as I added your key, you should be able to check your accessible repos
+via <code>ssh gitolite info</code></p></li>
+<li><p>clone <em>ckon</em> via <code>git clone gitolite:ckon</code></p></li>
+<li><p>to install: <code>cd ckon; ./installCkon</code></p></li>
+</ul><h3>Usage</h3>
+
+<h4>Generic Options</h4>
+
+<p>Shown below are the generic command line options which can be given to <em>ckon</em>.</p>
+
+<pre><code>Generic Options:
+        -h [ --help ]         show this help
+        -v [ --verbose ]      verbose output
+        -j arg                call make with option -j &lt;#cores&gt;
+        --ckon_cmd arg        setup | clean | install
 </code></pre>
 
-<h3>how-to</h3>
+<p>The long option <code>--ckon_cmd</code> is implemented as optional positional option
+to run the setup, clean all compilation products (i.e. <code>make clean</code>) and
+globally install libraries and programs (i.e. <code>make install</code>).</p>
 
-<p>blafasl stuff</p>
+<h4>Setup</h4>
 
-<h3>Authors and Contributors</h3>
+<p><code>ckon setup</code> generates the files <em>configure.ac</em> and <em>.autom4te.cfg</em> (both
+autoconf specific, no need for modifications) as well as <em>ckon.cfg</em>. Modify
+the latter to resemble your directory structure and linker options.</p>
 
-<p>me (<a href="https://github.com/tschaume" class="user-mention">@tschaume</a>)</p>
+<h4>Configuration</h4>
 
-<h3>License</h3>
+<p>The following options can be set on the command line or preferably in
+<em>ckon.cfg</em>.</p>
 
-<p>MIT</p>
+<pre><code>Configuration:
+        -p [ --pythia ] arg     link with pythia library
+        -r [ --roofit ] arg     link with roofit library
+        -s [ --suffix ] arg     Add suffix + in LinkDef file
+        -b [ --boost ] arg      include BOOST_INC and BOOST_LIB
+        --ckon.config_file arg  config file [internal use only]
+        --ckon.src_dir arg      source dir
+        --ckon.core_dir arg     core dir [obsolete]
+        --ckon.obsolete_dir arg obsolete dir
+                [put your obsolete code in
+                ckon.src_dir/ckon.obsolete_dir]
+        --ckon.exclSuffix arg   no + suffix in LinkDef pragma
+        --ckon.DontScan arg     no source scan
+                [skip dirs in space-separated list ckon.DontScan
+                during source scan]
+        --ckon.NoRootCint arg   no dictionary
+                [don't generate CINT dictionary for subdirs in
+                space-separated list ckon.NoRootCint]
+        --ckon.prog_subdir arg  progs subdir
+                [ckon.prog_subdir contains the programs
+                for a specific subdir]
+        --ckon.macro_subdir arg macro subdir
+                [obsolete, can be merged with ckon.DontScan]
+        --ckon.build_dir arg    build dir [$ ckon]
+        --ckon.install_dir arg  install dir [$ ckon install]
+</code></pre>
+
+<h4>Typical Directory Structure</h4>
+
+<p>Put header and source files for each library into a separate folder in
+<code>ckon.src_dir</code>.  Running <em>ckon</em> should automagically take the right action
+for the current status of your build directory. Makefiles and LinkDef’s are
+generated automatically based on the contents in the ckon.src_dir directory.  A
+typical directory structure could look as follows - using the current defaults
+for illustration purposes:</p>
+
+<pre><code>StRoot
+├── CocktailInputPt
+│   ├── CocktailInputPt.cxx
+│   ├── CocktailInputPt.h
+│   ├── dat-files
+│   └── programs
+│       └── cipt.cc
+├── ElectronPid
+│   ├── BetaPanels.cxx
+│   ├── BetaPanels.h
+│   ├── PureSampleAnalysis.cxx
+│   ├── PureSampleAnalysis.h
+│   ├── SigmaElFitsMaker.cxx
+│   ├── SigmaElFitsMaker.h
+│   ├── SigmaElFitsPlotter.cxx
+│   ├── SigmaElFitsPlotter.h
+│   ├── SigmaElFitsUtils.cxx
+│   ├── SigmaElFitsUtils.h
+│   └── programs
+│       ├── README
+│       ├── beta3sig.cc
+│       ├── dedxCut.cc
+│       ├── nsigparamsGP.cc
+│       └── pureSamp.cc
+├── Gnuplot
+│   ├── Gnuplot.cxx
+│   └── Gnuplot.h
+├── InvMassBgAnalysis
+│   ├── InvMassBgAnalysis.cxx
+│   ├── InvMassBgAnalysis.h
+│   └── programs
+│       ├── invmassBg.cc
+│       └── runCocktail.cc
+├── RunQA
+│   ├── Grubbs.cxx
+│   ├── Grubbs.h
+│   ├── LinFit.cxx
+│   ├── LinFit.h
+│   ├── RunQaHistos.cxx
+│   ├── RunQaHistos.h
+│   └── programs
+│       └── doRunQA.cc
+├── StBadRdosDb
+│   ├── StBadRdosDb.cxx
+│   ├── StBadRdosDb.h
+│   ├── database
+│   │   ├── dbfiles
+│   │   ├── genAll.sh
+│   │   └── genBadRdosDb.pl
+│   └── macros
+│       └── testStBadRdosDb.C
+├── YamlCfgReader
+│   ├── YamlCfgReader.cxx
+│   ├── YamlCfgReader.h
+│   └── config.yml
+</code></pre>
+
+<h3>Appendix</h3>
+
+<h4>Reference Talk about Automake/Autoconf Setup</h4>
+
+<p>Talk at Junior's Day of STAR Collaboration Meeting (LBNL, 2011/11/14)<br>
+[link to be added]</p>
+
+<h4>Software Requirements</h4>
+
+<p>The following software and corresponding versions should be installed on your
+system (might not be complete):</p>
+
+<ul>
+<li>m4/1.4.6</li>
+<li>autoconf/2.68</li>
+<li>automake/1.11.4</li>
+<li>libtool/2.4</li>
+<li>boost/1.50</li>
+</ul><h4>License &amp; Project Homepage</h4>
+
+<p>This software will be published under the MIT License
+(<a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>).<br>
+Project page at <a href="http://tschaume.github.com/ckon">http://tschaume.github.com/ckon</a></p>
+
+<h4>Authors and Contributors</h4>
+
+<p>Patrick Huck (<a href="https://github.com/tschaume" class="user-mention">@tschaume</a>)<br><em>invaluable contributions</em>: Hiroshi Masui</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/tschaume">tschaume</a></p>
