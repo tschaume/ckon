@@ -4,7 +4,24 @@ includes building the required libraries and scanning/parsing include headers to
 figure out which libraries the main programs need to be linked to. It uses
 automake/autoconf to be platform independent and GNU install compliant.
 
-### HowTo
+### Get the Code & Install
+
+The code is currently not published, yet. I plan to do it soon, though. If you'd like to contribute I'd need to grant you access to my private gitolite-managed repository server. Do the following:
+
+- generate a ssh-key pair (no password), name the key-pair ```<username>(.pub)```
+- send the .pub to @tschaume, put the following in ~/.ssh/config
+
+        Host=gitolite
+        Hostname=cgit.the-huck.com
+        User=gitolite
+        IdentityFile=~/.ssh/<username>
+        IdentitiesOnly=yes
+- as soon as I added your key, you should be able to check your accessible repos
+via ```ssh gitolite info```
+- clone *ckon* via ```git clone gitolite:ckon```
+- to install: ```cd ckon; ./installCkon```
+
+### Usage
 
 #### Generic Options
 
@@ -23,7 +40,7 @@ to run the setup, clean all compilation products (i.e. ```make clean```) and
 globally install libraries and programs (i.e. ```make install```).
 
 #### Setup
-```$ ckon setup``` generates the files *configure.ac* and *.autom4te.cfg* (both
+```ckon setup``` generates the files *configure.ac* and *.autom4te.cfg* (both
 autoconf specific, no need for modifications) as well as *ckon.cfg*. Modify
 the latter to resemble your directory structure and linker options.
 
@@ -41,15 +58,18 @@ Configuration:
         --ckon.src_dir arg      source dir
         --ckon.core_dir arg     core dir [obsolete]
         --ckon.obsolete_dir arg obsolete dir
-                [put your obsolete code in ckon.src_dir/ckon.obsolete_dir]
-        --ckon.exclSuffix arg   no + suffix in LinkDef.h class pragma
+                [put your obsolete code in
+                ckon.src_dir/ckon.obsolete_dir]
+        --ckon.exclSuffix arg   no + suffix in LinkDef pragma
         --ckon.DontScan arg     no source scan
-                [skip dirs in space-separated list ckon.DontScan during source scan]
+                [skip dirs in space-separated list ckon.DontScan
+                during source scan]
         --ckon.NoRootCint arg   no dictionary
-                [don't generate CINT dictionary for subdirs in space-separated
-                list ckon.NoRootCint]
+                [don't generate CINT dictionary for subdirs in
+                space-separated list ckon.NoRootCint]
         --ckon.prog_subdir arg  progs subdir
-                [ckon.prog_subdir contains the programs for a specific subdir]
+                [ckon.prog_subdir contains the programs
+                for a specific subdir]
         --ckon.macro_subdir arg macro subdir
                 [obsolete, can be merged with ckon.DontScan]
         --ckon.build_dir arg    build dir [$ ckon]
@@ -123,28 +143,12 @@ StRoot
 │   └── config.yml
 ```
 
-### Get the Code & Install
-
-The code is currently not published, yet. I plan to do it soon, though. If you'd like to contribute I'd need to grant you access to my private gitolite-managed repository server. Do the following:
-
-- generate a ssh-key pair (no password), name the key-pair <username>(.pub)
-- send the .pub to @tschaume, put the following in ~/.ssh/config
-
-        Host=gitolite
-        Hostname=cgit.the-huck.com
-        User=gitolite
-        IdentityFile=~/.ssh/<username>
-        IdentitiesOnly=yes
-- as soon as I added your key, you should be able to check your accessible repos
-via ``` $ ssh gitolite info ```
-- clone *ckon* via ``` $ git clone gitolite:ckon ```
-- to install: ```$ cd ckon; ./installCkon```
-
 ### Appendix
 
 #### Reference Talk about Automake/Autoconf Setup
 
-Talk at Junior's Day of STAR Collaboration Meeting (LBNL, 2012/11/14) [link to be added]
+Talk at Junior's Day of STAR Collaboration Meeting (LBNL, 2011/11/14)  
+[link to be added]
 
 #### Software Requirements
 
