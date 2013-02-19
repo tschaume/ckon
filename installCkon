@@ -52,7 +52,7 @@ if [ $# -ge 1 ]; then
   boostopts='--with-boost --with-boost-filesystem --with-boost-system'
   boostopts=$boostopts' --with-boost-regex --with-boost-program-options'
   ../configure --prefix=$prefix $boostopts
-  make -j $nCpu
+  make -j $nCpu CXXFLAGS="-Wall -Werror"
   make install
 
   echo "===> ckon build done."
