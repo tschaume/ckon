@@ -13,13 +13,11 @@ void helpers::push_subdirs(vpath* subdirs) {
   fs::recursive_directory_iterator d_end;
   for (fs::recursive_directory_iterator d(mCl->ckon_src_dir); d != d_end; ++d) {
     fs::path p((*d).path());
-    if ( p.filename().compare(mCl->ckon_core_dir) != 0 ) {
-      // == ckon_core_dir would return 0 !
-      d.no_push();  // don't descend into dir
-      // skip ckon_obsolete_dir
-      if ( !p.filename().compare(mCl->ckon_obsolete_dir) ) continue;
-      subdirs->push_back(p);
-    }
+    if ( !fs::is_directory(p) ) continue;
+    d.no_push();  // don't descend into dir
+    // skip ckon_obsolete_dir
+    if ( !p.filename().compare(mCl->ckon_obsolete_dir) ) continue;
+    subdirs->push_back(p);
   }
 }
 

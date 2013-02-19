@@ -16,8 +16,7 @@ typedef io::tee_device<ostream, fs::ofstream> Tee;
 typedef io::stream<Tee> TeeStream;
 
 cmdline::cmdline()
-: ckon_cmd(""), ckon_config_file("ckon.cfg"),
-  ckon_src_dir("StRoot"), ckon_core_dir("MyCore"),
+: ckon_cmd(""), ckon_config_file("ckon.cfg"), ckon_src_dir("StRoot"),
   ckon_obsolete_dir("Obsolete"), ckon_exclSuffix("Gnuplot Options"),
   ckon_DontScan("dat-files database"), ckon_NoRootCint("YamlCpp"),
   ckon_prog_subdir("programs"), ckon_macro_subdir("macros"),
@@ -49,7 +48,6 @@ void cmdline::runSetup() {
   both << "suffix=" << bSuffix << endl;
   both << "[ckon]" << endl;
   both << "src_dir=" << ckon_src_dir << endl;
-  both << "core_dir=" << ckon_core_dir << endl;
   both << "obsolete_dir=" << ckon_obsolete_dir << endl;
   both << "prog_subdir=" << ckon_prog_subdir << endl;
   both << "macro_subdir=" << ckon_macro_subdir << endl;
@@ -82,7 +80,6 @@ bool cmdline::parse(int argc, char *argv[]) {
     ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC and BOOST_LIB")
     ("ckon.config_file", po::value<string>(&ckon_config_file), "config file")
     ("ckon.src_dir", po::value<string>(&ckon_src_dir), "source dir")
-    ("ckon.core_dir", po::value<string>(&ckon_core_dir), "core dir")
     ("ckon.obsolete_dir", po::value<string>(&ckon_obsolete_dir), "obsolete dir")
     ("ckon.exclSuffix", po::value<string>(&ckon_exclSuffix), "no + suffix")
     ("ckon.DontScan", po::value<string>(&ckon_DontScan), "no source scan")

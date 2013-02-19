@@ -32,7 +32,6 @@ class cmdline {
     string nCpu;
     string ckon_config_file;
     string ckon_src_dir;
-    string ckon_core_dir;
     string ckon_obsolete_dir;
     string ckon_exclSuffix;
     string ckon_DontScan;
