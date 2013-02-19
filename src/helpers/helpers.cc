@@ -131,7 +131,7 @@ string helpers::writeBinProg(const fs::path& p) {
 }
 
 string helpers::writeMakefileAmHd() {
-  string out = "AUTOMAKE_OPTIONS = foreign subdir-objects -Wall\n";
+  string out = "AUTOMAKE_OPTIONS = foreign subdir-objects -Wall -Werror\n";
   out += "ROOTINCLUDE = @ROOTINCLUDES@\n";
   out += "AM_CPPFLAGS = -I. -I$(srcdir) -I$(pkgincludedir) ";
   if ( mCl->bBoost ) out += "-I$(BOOST_INC) ";
