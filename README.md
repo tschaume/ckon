@@ -19,7 +19,7 @@ The code is currently not published, yet. I plan to do it soon, though. If you'd
 - as soon as I added your key, you should be able to check your accessible repos
 via ```ssh gitolite info```
 - clone *ckon* via ```git clone gitolite:ckon```
-- to install: ```cd ckon; ./installCkon```
+- to install: ```cd ckon; ./installCkon``` (see ```./configure --help``` for configure options)
 
 ### Usage
 
