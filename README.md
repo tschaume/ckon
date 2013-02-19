@@ -4,6 +4,17 @@ includes building the required libraries and scanning/parsing include headers to
 figure out which libraries the main programs need to be linked to. It uses
 automake/autoconf to be platform independent and GNU install compliant.
 
+### To-Do
+
+- CPPFLAGS="-Werror -Wall" option
+- hide ```ckon.config_file```
+- .cgitignore, merges the options:
+
+        - ckon.core_dir
+        - ckon.obsolete_dir
+        - ckon.DontScan
+        - ckon.macro_subdir
+
 ### Get the Code & Install
 
 The code is currently not published, yet. I plan to do it soon, though. If you'd like to contribute I'd need to grant you access to my private gitolite-managed repository server. Do the following:
