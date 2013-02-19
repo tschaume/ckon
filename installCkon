@@ -22,8 +22,8 @@ if [ $# -ge 1 ]; then
     echo 'AM_INIT_AUTOMAKE([-Wall no-define])' >> configure.ac
     echo 'AC_PROG_CXX' >> configure.ac
     echo 'AX_BOOST_BASE([1.50])' >> configure.ac
-    echo 'AX_BOOST_FILESYSTEM' >> configure.ac
     echo 'AX_BOOST_SYSTEM' >> configure.ac
+    echo 'AX_BOOST_FILESYSTEM' >> configure.ac
     echo 'AX_BOOST_REGEX' >> configure.ac
     echo 'AX_BOOST_PROGRAM_OPTIONS' >> configure.ac
     echo 'AC_CONFIG_FILES([Makefile])' >> configure.ac
@@ -36,8 +36,8 @@ if [ $# -ge 1 ]; then
     echo 'AM_CPPFLAGS = $(BOOST_CPPFLAGS)' >> Makefile.am
     echo 'bin_PROGRAMS = ckon' >> Makefile.am
     echo 'ckon_LDFLAGS = $(BOOST_LDFLAGS) -lstdc++' >> Makefile.am
-    echo 'ckon_LDFLAGS += $(BOOST_FILESYSTEM_LIB)' >> Makefile.am
     echo 'ckon_LDFLAGS += $(BOOST_SYSTEM_LIB)' >> Makefile.am
+    echo 'ckon_LDFLAGS += $(BOOST_FILESYSTEM_LIB)' >> Makefile.am
     echo 'ckon_LDFLAGS += $(BOOST_REGEX_LIB)' >> Makefile.am
     echo 'ckon_LDFLAGS += $(BOOST_PROGRAM_OPTIONS_LIB)' >> Makefile.am
     echo 'ckon_SOURCES =' >> Makefile.am
