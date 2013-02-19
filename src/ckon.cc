@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
 
     // always call make when invoking ckon
     const char* istr = (clopts->bInstall)?"install":"";
-    string make_call = "make -j " + clopts->nCpu + istr;
+    string make_call = "make -j " + clopts->nCpu + " CXXFLAGS=\"-Wall -Werror\" " + istr;
     fs::current_path(cwd);  // chdir
     system(make_call.c_str());
 
