@@ -6,11 +6,10 @@ automake/autoconf to be platform independent and GNU install compliant.
 
 ### To-Do
 
-- CPPFLAGS="-Werror -Wall" option
+- CPPFLAGS="-Werror -Wall" not default but optional
 - hide ```ckon.config_file```
 - .cgitignore, merges the options:
 
-        - ckon.core_dir
         - ckon.obsolete_dir
         - ckon.DontScan
         - ckon.macro_subdir
