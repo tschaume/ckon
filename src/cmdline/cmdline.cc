@@ -74,10 +74,10 @@ bool cmdline::parse(int argc, char *argv[]) {
 
   po::options_description config("Configuration");
   config.add_options()
-    ("pythia,p", po::value<bool>(&bPythia), "link with pythia library")
-    ("roofit,r", po::value<bool>(&bRooFit), "link with roofit library")
-    ("suffix,s", po::value<bool>(&bSuffix), "Add suffix + in LinkDef file")
-    ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC and BOOST_LIB")
+    ("pythia,p", po::value<bool>(&bPythia), "link with pythia library (bool)")
+    ("roofit,r", po::value<bool>(&bRooFit), "link with roofit library (bool)")
+    ("suffix,s", po::value<bool>(&bSuffix), "Add suffix + in LinkDef file (bool)")
+    ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC and BOOST_LIB (bool)")
     ("ckon.config_file", po::value<string>(&ckon_config_file), "config file")
     ("ckon.src_dir", po::value<string>(&ckon_src_dir), "source dir")
     ("ckon.obsolete_dir", po::value<string>(&ckon_obsolete_dir), "obsolete dir")
