@@ -16,7 +16,7 @@ typedef io::tee_device<ostream, fs::ofstream> Tee;
 typedef io::stream<Tee> TeeStream;
 
 cmdline::cmdline()
-: ckon_cmd(""), ckon_config_file("ckon.cfg"), ckon_src_dir("StRoot"),
+: ckon_cmd(""), nCpu("1"), ckon_config_file("ckon.cfg"), ckon_src_dir("StRoot"),
   ckon_obsolete_dir("Obsolete"), ckon_exclSuffix("Gnuplot Options"),
   ckon_DontScan("dat-files database"), ckon_NoRootCint("YamlCpp"),
   ckon_prog_subdir("programs"), ckon_macro_subdir("macros"),
