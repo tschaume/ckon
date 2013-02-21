@@ -40,6 +40,7 @@ class cmdline {
     string ckon_macro_subdir;
     string ckon_build_dir;
     string ckon_install_dir;
+    string ckon_cppflags;
 
     bool parse(int argc, char *argv[]);
 };

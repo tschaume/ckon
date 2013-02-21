@@ -20,7 +20,7 @@ cmdline::cmdline()
   ckon_obsolete_dir("Obsolete"), ckon_exclSuffix("Gnuplot Options"),
   ckon_DontScan("dat-files database"), ckon_NoRootCint("YamlCpp"),
   ckon_prog_subdir("programs"), ckon_macro_subdir("macros"),
-  ckon_build_dir("build"), ckon_install_dir("build")
+  ckon_build_dir("build"), ckon_install_dir("build"), ckon_cppflags("-Werror -Wall")
 { }
 
 void cmdline::purge() {
@@ -56,6 +56,7 @@ void cmdline::runSetup() {
   both << "exclSuffix=\"" << ckon_exclSuffix << "\"" << endl;
   both << "DontScan=\"" << ckon_DontScan << "\"" << endl;
   both << "NoRootCint=" << ckon_NoRootCint << endl;
+  both << "cppflags=\"" << ckon_cppflags << "\"" << endl;
   both.close();
 
   writeConfigureAc();
@@ -86,7 +87,8 @@ bool cmdline::parse(int argc, char *argv[]) {
     ("ckon.prog_subdir", po::value<string>(&ckon_prog_subdir), "progs subdir")
     ("ckon.macro_subdir", po::value<string>(&ckon_macro_subdir), "macro subdir")
     ("ckon.build_dir", po::value<string>(&ckon_build_dir), "build dir")
-    ("ckon.install_dir", po::value<string>(&ckon_install_dir), "install dir");
+    ("ckon.install_dir", po::value<string>(&ckon_install_dir), "install dir")
+    ("ckon.cppflags", po::value<string>(&ckon_cppflags), "add CPPFLAGS");
 
   po::options_description allopts;
   allopts.add(generic).add(config);

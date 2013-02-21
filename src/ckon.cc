@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
     if ( atoi((clopts->nCpu).c_str()) > 1 ) {
       make_call += "-j " + clopts->nCpu + " ";
     }
-    make_call += "CXXFLAGS=\"-Wall -Werror\" ";
+    make_call += "CXXFLAGS=" + clopts->ckon_cppflags + " ";
     make_call += istr;
     fs::current_path(cwd);  // chdir
     system(make_call.c_str());
