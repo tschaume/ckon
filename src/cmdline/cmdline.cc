@@ -78,7 +78,6 @@ bool cmdline::parse(int argc, char *argv[]) {
     ("roofit,r", po::value<bool>(&bRooFit), "link with roofit library (bool)")
     ("suffix,s", po::value<bool>(&bSuffix), "Add suffix + in LinkDef file (bool)")
     ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC and BOOST_LIB (bool)")
-    ("ckon.config_file", po::value<string>(&ckon_config_file), "config file")
     ("ckon.src_dir", po::value<string>(&ckon_src_dir), "source dir")
     ("ckon.obsolete_dir", po::value<string>(&ckon_obsolete_dir), "obsolete dir")
     ("ckon.exclSuffix", po::value<string>(&ckon_exclSuffix), "no + suffix")
