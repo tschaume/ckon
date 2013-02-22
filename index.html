@@ -54,7 +54,8 @@ IdentitiesOnly=yes
 <li><p>as soon as I added your key, you should be able to check your accessible repos
 via <code>ssh gitolite info</code></p></li>
 <li><p>clone <em>ckon</em> via <code>git clone gitolite:ckon</code></p></li>
-<li><p>to install: <code>cd ckon; ./installCkon</code></p></li>
+<li><p>to install: <code>cd ckon; ./installCkon</code><br>
+(see <code>./configure --help</code> for configure options)</p></li>
 </ul><h3>Usage</h3>
 
 <h4>Generic Options</h4>
@@ -62,10 +63,10 @@ via <code>ssh gitolite info</code></p></li>
 <p>Shown below are the generic command line options which can be given to <em>ckon</em>.</p>
 
 <pre><code>Generic Options:
-        -h [ --help ]         show this help
-        -v [ --verbose ]      verbose output
-        -j arg                call make with option -j &lt;#cores&gt;
-        --ckon_cmd arg        setup | clean | install
+  -h [ --help ]         show this help
+  -v [ --verbose ]      verbose output
+  -j arg                call make with option -j &lt;#cores&gt;
+  --ckon_cmd arg        setup | clean | install
 </code></pre>
 
 <p>The long option <code>--ckon_cmd</code> is implemented as optional positional option
@@ -81,33 +82,26 @@ the latter to resemble your directory structure and linker options.</p>
 <h4>Configuration</h4>
 
 <p>The following options can be set on the command line or preferably in
-<em>ckon.cfg</em>.</p>
+<em>ckon.cfg</em>. Optionally, a file named <code>cgitignore</code> with a list of strings to
+be ignored during the build process, can be created in the working directory.
+Wildcards not supported (yet).  </p>
 
 <pre><code>Configuration:
-        -p [ --pythia ] arg     link with pythia library
-        -r [ --roofit ] arg     link with roofit library
-        -s [ --suffix ] arg     Add suffix + in LinkDef file
-        -b [ --boost ] arg      include BOOST_INC and BOOST_LIB
-        --ckon.config_file arg  config file [internal use only]
-        --ckon.src_dir arg      source dir
-        --ckon.core_dir arg     core dir [obsolete]
-        --ckon.obsolete_dir arg obsolete dir
-                [put your obsolete code in
-                ckon.src_dir/ckon.obsolete_dir]
-        --ckon.exclSuffix arg   no + suffix in LinkDef pragma
-        --ckon.DontScan arg     no source scan
-                [skip dirs in space-separated list ckon.DontScan
-                during source scan]
-        --ckon.NoRootCint arg   no dictionary
-                [don't generate CINT dictionary for subdirs in
-                space-separated list ckon.NoRootCint]
-        --ckon.prog_subdir arg  progs subdir
-                [ckon.prog_subdir contains the programs
-                for a specific subdir]
-        --ckon.macro_subdir arg macro subdir
-                [obsolete, can be merged with ckon.DontScan]
-        --ckon.build_dir arg    build dir [$ ckon]
-        --ckon.install_dir arg  install dir [$ ckon install]
+  -p [ --pythia ] arg    link with pythia library (bool)
+  -r [ --roofit ] arg    link with roofit library (bool)
+  -s [ --suffix ] arg    Add suffix + in LinkDef file (bool)
+  -b [ --boost ] arg     include BOOST_INC and BOOST_LIB (bool)
+  --ckon.src_dir arg     source dir
+  --ckon.exclSuffix arg   no + suffix in LinkDef pragma
+  --ckon.NoRootCint arg   no dictionary
+        [don't generate CINT dictionary for subdirs in
+        space-separated list ckon.NoRootCint]
+  --ckon.prog_subdir arg  progs subdir
+        [ckon.prog_subdir contains the programs
+        for a specific subdir]
+  --ckon.build_dir arg    build dir [$ ckon]
+  --ckon.install_dir arg  install dir [$ ckon install]
+  --ckon.cppflags arg    add CPPFLAGS to make call
 </code></pre>
 
 <h4>Typical Directory Structure</h4>
