@@ -51,6 +51,7 @@ void helpers::push_src(vpath* headers, vpath* sources, vpath* progs) {
       if ( check_ignore(p) ) d.no_push();
     }
     if ( p.filename().compare("LinkDef.h") == 0 ) continue;
+    if ( check_ignore(p) ) continue;
     if ( p.extension().compare(".h") == 0 ) headers->push_back(p);
     if ( p.extension().compare(".cxx") == 0 ) sources->push_back(p);
   }
@@ -61,6 +62,7 @@ void helpers::push_obj(const char* obj, vector<string>* objv) {
     if ( fs::is_directory(*dir) ) continue;
     fs::path p((*dir).path());
     if ( p.filename().compare("LinkDef.h") == 0 ) continue;
+    if ( check_ignore(p) ) continue;
     if ( p.extension().compare(".h") == 0 ) {
       if ( mCl->bVerbose ) std::cout << "Processing file " << p << std::endl;
       map_type m = myregex::getIndexMap(p, obj);
