@@ -139,13 +139,14 @@ int main(int argc, char *argv[]) {
     }
 
     // always call make when invoking ckon
-    const char* istr = (clopts->bInstall)?"install":"";
     string make_call = "make ";
     if ( atoi((clopts->nCpu).c_str()) > 1 ) {
       make_call += "-j " + clopts->nCpu + " ";
     }
-    make_call += "CXXFLAGS=" + clopts->ckon_cppflags + " ";
-    make_call += istr;
+    if ( !(clopts->ckon_cppflags).empty() ) {
+      make_call += "CXXFLAGS=" + clopts->ckon_cppflags + " ";
+    }
+    if ( clopts->bInstall ) make_call += "install";
     fs::current_path(cwd);  // chdir
     system(make_call.c_str());
 
