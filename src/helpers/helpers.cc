@@ -15,10 +15,22 @@ void helpers::push_subdirs(vpath* subdirs) {
     fs::path p((*d).path());
     if ( !fs::is_directory(p) ) continue;
     d.no_push();  // don't descend into dir
-    // skip ckon_obsolete_dir
-    if ( !p.filename().compare(mCl->ckon_obsolete_dir) ) continue;
+    if ( check_ignore(p) ) continue; // skip ignored dir's
     subdirs->push_back(p);
   }
+}
+
+bool helpers::check_ignore(const fs::path& p) {
+  BOOST_FOREACH(string i, mCl->ckon_vign) {
+    if ( p.string().find(i) != string::npos ) {
+      if ( mCl->bVerbose ) {
+        std::cout << "found ignore string " << i;
+        std::cout << " in " << p.string() << std::endl;
+      }
+      return true;
+    }
+  }
+  return false;
 }
 
 void helpers::push_src(vpath* headers, vpath* sources, vpath* progs) {
@@ -35,11 +47,8 @@ void helpers::push_src(vpath* headers, vpath* sources, vpath* progs) {
           }
         }
       }
-      if ( p.filename().compare(mCl->ckon_macro_subdir) == 0 ) d.no_push();
       if ( p.filename().compare(".git") == 0 ) d.no_push();
-      string fn = p.filename().string();
-      bool bDontScan = (mCl->ckon_DontScan.find(fn) != string::npos);
-      if ( bDontScan ) d.no_push();
+      if ( check_ignore(p) ) d.no_push();
     }
     if ( p.filename().compare("LinkDef.h") == 0 ) continue;
     if ( p.extension().compare(".h") == 0 ) headers->push_back(p);

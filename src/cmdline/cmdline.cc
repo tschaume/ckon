@@ -1,5 +1,6 @@
 // Copyright (c) 2013 Patrick Huck
 #include "src/cmdline/cmdline.h"
+#include <boost/foreach.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/tee.hpp>
@@ -17,10 +18,10 @@ typedef io::stream<Tee> TeeStream;
 
 cmdline::cmdline()
 : ckon_cmd(""), nCpu("1"), ckon_config_file("ckon.cfg"), ckon_src_dir("StRoot"),
-  ckon_obsolete_dir("Obsolete"), ckon_exclSuffix("Gnuplot Options"),
-  ckon_DontScan("dat-files database"), ckon_NoRootCint("YamlCpp"),
-  ckon_prog_subdir("programs"), ckon_macro_subdir("macros"),
-  ckon_build_dir("build"), ckon_install_dir("build"), ckon_cppflags("-Werror -Wall")
+  ckon_exclSuffix("Gnuplot Options"), ckon_NoRootCint("YamlCpp"),
+  ckon_prog_subdir("programs"), ckon_build_dir("build"),
+  ckon_install_dir("build"), ckon_cppflags("-Wall"),
+  ckon_ignore_file("ckonignore")
 { }
 
 void cmdline::purge() {
@@ -48,13 +49,10 @@ void cmdline::runSetup() {
   both << "suffix=" << bSuffix << endl;
   both << "[ckon]" << endl;
   both << "src_dir=" << ckon_src_dir << endl;
-  both << "obsolete_dir=" << ckon_obsolete_dir << endl;
   both << "prog_subdir=" << ckon_prog_subdir << endl;
-  both << "macro_subdir=" << ckon_macro_subdir << endl;
   both << "build_dir=" << ckon_build_dir << endl;
   both << "install_dir=" << ckon_install_dir << endl;
   both << "exclSuffix=\"" << ckon_exclSuffix << "\"" << endl;
-  both << "DontScan=\"" << ckon_DontScan << "\"" << endl;
   both << "NoRootCint=" << ckon_NoRootCint << endl;
   both << "cppflags=\"" << ckon_cppflags << "\"" << endl;
   both.close();
@@ -80,12 +78,9 @@ bool cmdline::parse(int argc, char *argv[]) {
     ("suffix,s", po::value<bool>(&bSuffix), "Add suffix + in LinkDef file (bool)")
     ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC and BOOST_LIB (bool)")
     ("ckon.src_dir", po::value<string>(&ckon_src_dir), "source dir")
-    ("ckon.obsolete_dir", po::value<string>(&ckon_obsolete_dir), "obsolete dir")
     ("ckon.exclSuffix", po::value<string>(&ckon_exclSuffix), "no + suffix")
-    ("ckon.DontScan", po::value<string>(&ckon_DontScan), "no source scan")
     ("ckon.NoRootCint", po::value<string>(&ckon_NoRootCint), "no dictionary")
     ("ckon.prog_subdir", po::value<string>(&ckon_prog_subdir), "progs subdir")
-    ("ckon.macro_subdir", po::value<string>(&ckon_macro_subdir), "macro subdir")
     ("ckon.build_dir", po::value<string>(&ckon_build_dir), "build dir")
     ("ckon.install_dir", po::value<string>(&ckon_install_dir), "install dir")
     ("ckon.cppflags", po::value<string>(&ckon_cppflags), "add CPPFLAGS");
@@ -105,6 +100,13 @@ bool cmdline::parse(int argc, char *argv[]) {
     if ( fs::exists(ckon_config_file) ) {
       po::store(
           po::parse_config_file<char>(ckon_config_file.c_str(), config), vm);
+    }
+    if ( fs::exists(ckon_ignore_file) ) {
+      fs::ifstream ifs(ckon_ignore_file.c_str());
+      string line;
+      while ( std::getline(ifs, line) ) {
+        ckon_vign.push_back(line);
+      }
     }
 
     po::notify(vm);  // throws on error

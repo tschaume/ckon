@@ -26,6 +26,7 @@ class helpers {
     bool hasSuffix(const string& cl) {
       return ( mCl->bSuffix && mCl->ckon_exclSuffix.find(cl) == string::npos );
     }
+    bool check_ignore(const fs::path&);
 
   public:
     explicit helpers(const cmdline* cl);

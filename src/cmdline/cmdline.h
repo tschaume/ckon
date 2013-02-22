@@ -6,6 +6,7 @@
 #include <string>
 
 using std::string;
+using std::vector;
 namespace po = boost::program_options;
 
 class cmdline {
@@ -32,15 +33,15 @@ class cmdline {
     string nCpu;
     string ckon_config_file;
     string ckon_src_dir;
-    string ckon_obsolete_dir;
     string ckon_exclSuffix;
-    string ckon_DontScan;
     string ckon_NoRootCint;
     string ckon_prog_subdir;
-    string ckon_macro_subdir;
     string ckon_build_dir;
     string ckon_install_dir;
     string ckon_cppflags;
+    string ckon_ignore_file;
+
+    vector<string> ckon_vign;
 
     bool parse(int argc, char *argv[]);
 };
