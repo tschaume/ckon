@@ -19,7 +19,8 @@ The code is currently not published, yet. I plan to do it soon, though. If you'd
 - as soon as I added your key, you should be able to check your accessible repos
 via ```ssh gitolite info```
 - clone *ckon* via ```git clone gitolite:ckon```
-- to install: ```cd ckon; ./installCkon``` (see ```./configure --help``` for configure options)
+- to install: ```cd ckon; ./installCkon```  
+(see ```./configure --help``` for configure options)
 
 ### Usage
 
@@ -46,7 +47,7 @@ the latter to resemble your directory structure and linker options.
 
 #### Configuration
 The following options can be set on the command line or preferably in
-*ckon.cfg*. Optionally, a file named ```cgitignore``` with a list of strings to
+*ckon.cfg*. Optionally, a file named ```ckonignore``` with a list of strings to
 be ignored during the build process, can be created in the working directory.
 Wildcards not supported (yet).  
 
