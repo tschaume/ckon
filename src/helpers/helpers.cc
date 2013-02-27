@@ -130,10 +130,8 @@ string helpers::writeBinProg(const fs::path& p) {
   out += "_LDADD += -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ @LIBS@\n";
   if ( mCl->bBoost ) out += "bin_" + prog_name + "_LDADD += -L$(BOOST_LIB)\n";
   out += "bin_" + prog_name + "_LDADD += -ldl -lSpectrum\n";
-  if ( mCl->bRooFit )
-    out += "bin_" + prog_name + "_LDADD += -lRooFit -lRooFitCore -lMinuit\n";
-  if ( mCl->bPythia )
-    out += "bin_" + prog_name + "_LDADD += -lPhysics -lEG -lEGPythia6\n";
+  if ( mCl->ldadd.find(prog_name) != mCl->ldadd.end() )
+    out += "bin_" + prog_name + "_LDADD += " + mCl->ldadd.at(prog_name) + "\n";
   out += "bin_" + prog_name + "_LDFLAGS = -R $(ROOTLIBDIR) -L$(ROOTLIBDIR)\n";
   out += "bin_" + prog_name + " = @ROOTCFLAGS@\n";
   return out;

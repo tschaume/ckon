@@ -7,6 +7,7 @@
 
 using std::string;
 using std::vector;
+using std::map;
 namespace po = boost::program_options;
 
 class cmdline {
@@ -26,8 +27,6 @@ class cmdline {
     bool bInstall;
     bool bSetup;
     bool bClean;
-    bool bPythia;
-    bool bRooFit;
     bool bSuffix;
     bool bBoost;
     string nCpu;
@@ -40,6 +39,8 @@ class cmdline {
     string ckon_install_dir;
     string ckon_cppflags;
     string ckon_ignore_file;
+
+    map<string, string> ldadd;
 
     vector<string> ckon_vign;
 

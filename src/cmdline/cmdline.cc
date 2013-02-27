@@ -43,8 +43,6 @@ void cmdline::runSetup() {
   fs::ofstream cfgfile(ckon_config_file);
   Tee tee(cout, cfgfile);
   TeeStream both(tee);
-  both << "pythia=" << bPythia << endl;
-  both << "roofit=" << bRooFit << endl;
   both << "boost=" << bBoost << endl;
   both << "suffix=" << bSuffix << endl;
   both << "[ckon]" << endl;
@@ -68,14 +66,12 @@ bool cmdline::parse(int argc, char *argv[]) {
   generic.add_options()
     ("help,h", po::bool_switch(&bHelp), "show this help")
     ("verbose,v", po::bool_switch(&bVerbose), "verbose output")
-    (",j", po::value<string>(&nCpu), "call make with option -j <#cores>")
+    (",j", po::value<string>(&nCpu), "call make w/ -j <#cores>")
     ("ckon_cmd", po::value<string>(&ckon_cmd), "setup | clean | install");
 
   po::options_description config("Configuration");
   config.add_options()
-    ("pythia,p", po::value<bool>(&bPythia), "link with pythia library (bool)")
-    ("roofit,r", po::value<bool>(&bRooFit), "link with roofit library (bool)")
-    ("suffix,s", po::value<bool>(&bSuffix), "Add suffix + in LinkDef file (bool)")
+    ("suffix,s", po::value<bool>(&bSuffix), "add suffix + in LinkDef.h (bool)")
     ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC and BOOST_LIB (bool)")
     ("ckon.src_dir", po::value<string>(&ckon_src_dir), "source dir")
     ("ckon.exclSuffix", po::value<string>(&ckon_exclSuffix), "no + suffix")
@@ -85,8 +81,8 @@ bool cmdline::parse(int argc, char *argv[]) {
     ("ckon.install_dir", po::value<string>(&ckon_install_dir), "install dir")
     ("ckon.cppflags", po::value<string>(&ckon_cppflags), "add CPPFLAGS");
 
-  po::options_description allopts;
-  allopts.add(generic).add(config);
+  po::options_description userOpts;
+  userOpts.add(generic).add(config);
 
   po::positional_options_description posOpts;
   posOpts.add("ckon_cmd", 1);
@@ -94,26 +90,31 @@ bool cmdline::parse(int argc, char *argv[]) {
   po::variables_map vm;
 
   try {
+    // parse command line and config file
     po::store(
         po::command_line_parser(argc, argv)
-        .options(allopts).positional(posOpts).run(), vm);
+        .options(userOpts).positional(posOpts)
+        .allow_unregistered().run(), vm);
     if ( fs::exists(ckon_config_file) ) {
       po::store(
           po::parse_config_file<char>(ckon_config_file.c_str(), config), vm);
     }
+    // parse ckonignore file
     if ( fs::exists(ckon_ignore_file) ) {
       fs::ifstream ifs(ckon_ignore_file.c_str());
       string line;
-      while ( std::getline(ifs, line) ) {
-        ckon_vign.push_back(line);
-      }
+      while ( std::getline(ifs, line) ) ckon_vign.push_back(line);
     }
 
     po::notify(vm);  // throws on error
 
     if ( bHelp ) {  // --help option
       cout << "ckon -- automatic ROOT analyses compiler & linker" << endl;
-      cout << allopts << endl;
+      cout << userOpts << endl;
+      cout << "\nIn addition, unregistered options of the form";
+      cout << "\nldadd.prog_name are allowed to use for adding";
+      cout << "\nLDFLAGS to the linker of specific programs. The";
+      cout << "\ngiven string/value is added verbatim in LDADD.\n";
       return false;
     }
 

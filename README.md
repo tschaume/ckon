@@ -75,9 +75,13 @@ Configuration:
 Put header and source files for each library into a separate folder in
 ```ckon.src_dir```.  Running *ckon* should automagically take the right action
 for the current status of your build directory. Makefiles and LinkDef’s are
-generated automatically based on the contents in the ckon.src_dir directory.  A
-typical directory structure could look as follows - using the current defaults
-for illustration purposes:
+generated automatically based on the contents in the ckon.src_dir directory.
+
+- link pythia: -lPhysics -lEG -lEGPythia6
+- link roofit: -lRooFit -lRooFitCore -lMinuit
+
+A typical directory structure could look as follows - using the current
+defaults for illustration purposes:
 
 ```
 StRoot
