@@ -140,7 +140,7 @@ bool cmdline::parse(int argc, char *argv[]) {
 
     if ( bSetup ) { cout << "run setup" << endl; runSetup(); return false; }
     if ( bClean ) { purge(); return false; }
-    if ( !bInstall || ckon_cmd.empty() ) {
+    if ( !bInstall && !ckon_cmd.empty() ) {
       cout << "unknown ckon command: " << ckon_cmd << endl;
       return false;
     }
