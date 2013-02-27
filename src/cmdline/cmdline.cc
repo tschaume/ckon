@@ -90,15 +90,20 @@ bool cmdline::parse(int argc, char *argv[]) {
   po::variables_map vm;
 
   try {
-    // parse command line and config file
-    po::store(
-        po::command_line_parser(argc, argv)
-        .options(userOpts).positional(posOpts)
-        .allow_unregistered().run(), vm);
+    // parse command line
+    po::parsed_options cl_parsed =
+      po::command_line_parser(argc, argv).options(userOpts)
+      .positional(posOpts).allow_unregistered().run();
+    po::store(cl_parsed, vm);
+    // parse config file
     if ( fs::exists(ckon_config_file) ) {
       po::store(
           po::parse_config_file<char>(ckon_config_file.c_str(), config), vm);
     }
+    // parse unrecognized options
+    vector<string> unrec =
+      po::collect_unrecognized(cl_parsed.options, po::exclude_positional);
+    BOOST_FOREACH(string s, unrec) { cout << s << endl; }
     // parse ckonignore file
     if ( fs::exists(ckon_ignore_file) ) {
       fs::ifstream ifs(ckon_ignore_file.c_str());
