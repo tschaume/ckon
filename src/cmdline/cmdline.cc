@@ -4,12 +4,14 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/tee.hpp>
+#include <boost/algorithm/string.hpp>
 #include "src/clean/clean.h"
 #include "src/aux/utils.h"
 
 using std::cout;
 using std::endl;
 using std::ostream;
+using std::basic_string;
 namespace io = boost::iostreams;
 namespace fs = boost::filesystem;
 
@@ -91,19 +93,27 @@ bool cmdline::parse(int argc, char *argv[]) {
 
   try {
     // parse command line
+    // don't allow unregistered on command line
     po::parsed_options cl_parsed =
       po::command_line_parser(argc, argv).options(userOpts)
-      .positional(posOpts).allow_unregistered().run();
+      .positional(posOpts).run();
     po::store(cl_parsed, vm);
     // parse config file
     if ( fs::exists(ckon_config_file) ) {
-      po::store(
-          po::parse_config_file<char>(ckon_config_file.c_str(), config), vm);
+      // parse & allow unregistered
+      po::parsed_options file_parsed =
+        po::parse_config_file<char>(ckon_config_file.c_str(), config, true);
+      po::store(file_parsed, vm);
+      // collect & parse unrecognized options
+      BOOST_FOREACH(po::basic_option<char> opt, file_parsed.options) {
+        if ( opt.unregistered ) {
+          vector<string> v;
+          boost::split(v,opt.string_key,boost::is_any_of("."));
+          BOOST_FOREACH(basic_string<char> c, opt.value) ldadd[v.back()] += c;
+        }
+      }
     }
-    // parse unrecognized options
-    vector<string> unrec =
-      po::collect_unrecognized(cl_parsed.options, po::exclude_positional);
-    BOOST_FOREACH(string s, unrec) { cout << s << endl; }
+
     // parse ckonignore file
     if ( fs::exists(ckon_ignore_file) ) {
       fs::ifstream ifs(ckon_ignore_file.c_str());
@@ -119,7 +129,8 @@ bool cmdline::parse(int argc, char *argv[]) {
       cout << "\nIn addition, unregistered options of the form";
       cout << "\nldadd.prog_name are allowed to use for adding";
       cout << "\nLDFLAGS to the linker of specific programs. The";
-      cout << "\ngiven string/value is added verbatim in LDADD.\n";
+      cout << "\ngiven string/value is added verbatim in LDADD.";
+      cout << "\nUnregistered options are only allowed in ckon.cfg\n";
       return false;
     }
 
