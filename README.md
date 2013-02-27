@@ -77,8 +77,9 @@ Put header and source files for each library into a separate folder in
 for the current status of your build directory. Makefiles and LinkDef’s are
 generated automatically based on the contents in the ckon.src_dir directory.
 
-- link pythia: -lPhysics -lEG -lEGPythia6
-- link roofit: -lRooFit -lRooFitCore -lMinuit
+[ldadd]
+genCharmContrib=-lPhysics -lEG -lEGPythia6  # link pythia
+dedxCut=-lRooFit -lRooFitCore -lMinuit      # link roofit
 
 A typical directory structure could look as follows - using the current
 defaults for illustration purposes:
