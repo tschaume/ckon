@@ -1,3 +1,6 @@
+
+make sure that all system includes use ```< >```
+
 *ckon* is a small C++ program/tool which automatically takes care of
 compilation, dictionary generation as well linking of ROOT data analyses. This
 includes building the required libraries and scanning/parsing include headers to
