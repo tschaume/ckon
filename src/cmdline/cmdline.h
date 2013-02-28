@@ -3,7 +3,9 @@
 #define SRC_CMDLINE_CMDLINE_H_
 
 #include <boost/program_options.hpp>
+#include <vector>
 #include <string>
+#include <map>
 
 using std::string;
 using std::vector;

@@ -15,7 +15,7 @@ void helpers::push_subdirs(vpath* subdirs) {
     fs::path p((*d).path());
     if ( !fs::is_directory(p) ) continue;
     d.no_push();  // don't descend into dir
-    if ( check_ignore(p) ) continue; // skip ignored dir's
+    if ( check_ignore(p) ) continue;  // skip ignored dir's
     subdirs->push_back(p);
   }
 }

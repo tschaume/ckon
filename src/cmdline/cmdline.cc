@@ -74,7 +74,7 @@ bool cmdline::parse(int argc, char *argv[]) {
   po::options_description config("Configuration");
   config.add_options()
     ("suffix,s", po::value<bool>(&bSuffix), "add suffix + in LinkDef.h (bool)")
-    ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC and BOOST_LIB (bool)")
+    ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC/BOOST_LIB (bool)")
     ("ckon.src_dir", po::value<string>(&ckon_src_dir), "source dir")
     ("ckon.exclSuffix", po::value<string>(&ckon_exclSuffix), "no + suffix")
     ("ckon.NoRootCint", po::value<string>(&ckon_NoRootCint), "no dictionary")
@@ -108,7 +108,7 @@ bool cmdline::parse(int argc, char *argv[]) {
       BOOST_FOREACH(po::basic_option<char> opt, file_parsed.options) {
         if ( opt.unregistered ) {
           vector<string> v;
-          boost::split(v,opt.string_key,boost::is_any_of("."));
+          boost::split(v, opt.string_key, boost::is_any_of("."));
           BOOST_FOREACH(basic_string<char> c, opt.value) ldadd[v.back()] += c;
         }
       }
