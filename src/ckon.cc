@@ -44,8 +44,6 @@ int main(int argc, char *argv[]) {
 
     // loop all subdirs
     BOOST_FOREACH(fs::path sd, subdirs) {
-      // check if subdir "empty" (no header files). If so, skip.
-      if ( utils::isEmptyDir(sd) ) continue;
       if ( clopts->bVerbose ) cout << sd << endl;
 
       // set subdir for helpers, set libname

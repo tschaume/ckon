@@ -6,6 +6,7 @@
 #include <boost/filesystem/operations.hpp>
 #include "src/cmdline/cmdline.h"
 #include "src/aux/myregex.h"
+#include "src/aux/utils.h"
 
 helpers::helpers(const cmdline* cl) : mCl(cl), sd_cnt(0) { }
 
@@ -14,8 +15,8 @@ void helpers::push_subdirs(vpath* subdirs) {
   for (fs::recursive_directory_iterator d(mCl->ckon_src_dir); d != d_end; ++d) {
     fs::path p((*d).path());
     if ( !fs::is_directory(p) ) continue;
-    d.no_push();  // don't descend into dir
     if ( check_ignore(p) ) continue;  // skip ignored dir's
+    if ( utils::isEmptyDir(p) ) continue;  // skip dir w/ no header files
     subdirs->push_back(p);
   }
 }
