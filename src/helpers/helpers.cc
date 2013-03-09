@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 #include <boost/range/sub_range.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string.hpp>
 #include "src/cmdline/cmdline.h"
 #include "src/aux/myregex.h"
 #include "src/aux/utils.h"
@@ -108,7 +109,10 @@ string helpers::writeDict(const fs::path& linkdef, const vpath& headers) {
   out += dict.string() + ": ";
   BOOST_FOREACH(fs::path p, headers) { out += p.string() + " "; }
   out += linkdef.string() + '\n';
-  out += "\t rootcint -f $@ -c $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^\n";
+  string v = mCl->ckon_cppflags;
+  boost::erase_all(v, "\"");
+  out += "\t rootcint -f $@ -c " + v;
+  out += " $(DEFAULT_INCLUDES) $(AM_CPPFLAGS) $^\n";
   return out + '\n';
 }
 
