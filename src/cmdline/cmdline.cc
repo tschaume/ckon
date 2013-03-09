@@ -53,7 +53,7 @@ bool cmdline::parse(int argc, char *argv[]) {
     ("help,h", po::bool_switch(&bHelp), "show this help")
     ("verbose,v", po::bool_switch(&bVerbose), "verbose output")
     (",j", po::value<string>(&nCpu), "call make w/ -j <#cores>")
-    ("ckon_cmd", po::value<string>(&ckon_cmd), "setup | clean | install");
+    ("ckon_cmd", po::value<string>(&ckon_cmd), "setup | clean | install | dry");
 
   po::options_description config("Configuration");
   config.add_options()
@@ -121,10 +121,11 @@ bool cmdline::parse(int argc, char *argv[]) {
     bSetup = !ckon_cmd.compare("setup");
     bClean = !ckon_cmd.compare("clean");
     bInstall = !ckon_cmd.compare("install");
+    bDry = !ckon_cmd.compare("dry");
 
     if ( bSetup ) { cout << "run setup" << endl; runSetup(); return false; }
     if ( bClean ) { purge(); return false; }
-    if ( !bInstall && !ckon_cmd.empty() ) {
+    if ( !bInstall && !bDry && !ckon_cmd.empty() ) {
       cout << "unknown ckon command: " << ckon_cmd << endl;
       return false;
     }

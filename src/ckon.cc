@@ -119,6 +119,9 @@ int main(int argc, char *argv[]) {
 
     if ( redoMakefileAm ) top_out.close();
 
+    // return if dry-run requested
+    if ( clopts->bDry ) return 0;
+
     // run autoconf if configure script doesn't exist
     if ( !fs::exists("configure") ) system("autoreconf -v --force --install");
 

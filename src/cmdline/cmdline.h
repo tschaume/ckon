@@ -30,6 +30,7 @@ class cmdline {
     bool bInstall;
     bool bSetup;
     bool bClean;
+    bool bDry;
     bool bSuffix;
     bool bBoost;
     string nCpu;
