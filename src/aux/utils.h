@@ -21,5 +21,6 @@ class utils {
     static bool isEmptyDir(const fs::path&);
     static std::string writeLinkDefHd();
     static std::vector<std::string> split(const std::string&);
+    static std::string getM4Url(const std::string&);
 };
 #endif  // SRC_AUX_UTILS_H_

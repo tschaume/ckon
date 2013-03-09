@@ -5,6 +5,7 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/tee.hpp>
 #include <boost/algorithm/string.hpp>
+#include <curl/curl.h>
 #include "src/clean/clean.h"
 #include "src/aux/utils.h"
 
@@ -41,11 +42,21 @@ void cmdline::runSetup() {
   }
 
   if ( utils::askYesOrNo("are you going to use boost") == 'y' ) {
-    // set ckon_boost
     cout << "space-separate list of boost library names:" << endl;
     std::getline(std::cin, ckon_boost);
     // download boost m4 files if not exist (don't remove old ones)
-    //
+    curl_global_init(CURL_GLOBAL_ALL);
+    CURL* curl = curl_easy_init();
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    //curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback); // later
+    vector<string> boost_libs = utils::split(ckon_boost);
+    boost_libs.push_back("base");
+    BOOST_FOREACH(string s, boost_libs) {
+      curl_easy_setopt(curl, CURLOPT_URL, utils::getM4Url(s).c_str());
+      curl_easy_perform(curl);
+    }
+    curl_easy_cleanup(curl);
+    curl_global_cleanup();
     // FYI message
     cout << "re-run setup after adding boost libraries in ckon.cfg!" << endl;
   }

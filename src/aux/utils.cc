@@ -54,3 +54,9 @@ std::vector<std::string> utils::split(const std::string& vi) {
   boost::split(vo, v, boost::is_any_of(" "));
   return vo;
 }
+
+std::string utils::getM4Url(const std::string& s) {
+  std::string u("http://git.savannah.gnu.org/gitweb/");
+  u += "?p=autoconf-archive.git;a=blob_plain;f=m4/ax_boost_";
+  return u + s + ".m4";
+}
