@@ -42,7 +42,7 @@ void cmdline::runSetup() {
 
   if ( utils::askYesOrNo("are you going to use boost") == 'y' ) {
     // set ckon_boost
-    cout << "space-separate list of boost library names:";
+    cout << "space-separate list of boost library names:" << endl;
     std::getline(std::cin, ckon_boost);
     // download boost m4 files if not exist (don't remove old ones)
     //
