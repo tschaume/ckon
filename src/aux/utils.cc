@@ -1,6 +1,7 @@
 // Copyright (c) 2013 Patrick Huck
 #include "src/aux/utils.h"
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string.hpp>
 #include "src/cmdline/cmdline.h"
 
 utils::utils() {}
@@ -44,4 +45,12 @@ string utils::writeLinkDefHd() {
   out += "#pragma link off all functions;\n";
   out += "#pragma link C++ nestedclasses;\n";
   return out + "#pragma link C++ nestedtypedefs;\n";
+}
+
+std::vector<std::string> utils::split(const std::string& vi) {
+  std::string v(vi);
+  boost::erase_all(v, "\"");
+  std::vector<std::string> vo;
+  boost::split(vo, v, boost::is_any_of(" "));
+  return vo;
 }

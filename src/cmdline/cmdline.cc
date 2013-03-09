@@ -23,7 +23,7 @@ cmdline::cmdline()
   ckon_exclSuffix("Gnuplot Options"), ckon_NoRootCint("YamlCpp"),
   ckon_prog_subdir("programs"), ckon_build_dir("build"),
   ckon_install_dir("build"), ckon_cppflags("-Wall"),
-  ckon_ignore_file("ckonignore")
+  ckon_ignore_file("ckonignore"), ckon_boost("")
 { }
 
 void cmdline::purge() {
@@ -38,6 +38,16 @@ void cmdline::runSetup() {
     fs::remove(ckon_config_file);
     fs::remove("configure.ac");
     fs::remove(".autom4te.cfg");
+  }
+
+  if ( utils::askYesOrNo("are you going to use boost") == 'y' ) {
+    // set ckon_boost
+    cout << "space-separate list of boost library names:" << endl;
+    std::cin >> ckon_boost; // needs fixing
+    // download boost m4 files if not exist (don't remove old ones)
+    //
+    // FYI message
+    cout << "re-run setup after adding boost libraries in ckon.cfg!" << endl;
   }
 
   writeCfgFile();
@@ -58,14 +68,14 @@ bool cmdline::parse(int argc, char *argv[]) {
   po::options_description config("Configuration");
   config.add_options()
     ("suffix,s", po::value<bool>(&bSuffix), "add suffix + in LinkDef.h (bool)")
-    ("boost,b", po::value<bool>(&bBoost), "include BOOST_INC/BOOST_LIB (bool)")
     ("ckon.src_dir", po::value<string>(&ckon_src_dir), "source dir")
     ("ckon.exclSuffix", po::value<string>(&ckon_exclSuffix), "no + suffix")
     ("ckon.NoRootCint", po::value<string>(&ckon_NoRootCint), "no dictionary")
     ("ckon.prog_subdir", po::value<string>(&ckon_prog_subdir), "progs subdir")
     ("ckon.build_dir", po::value<string>(&ckon_build_dir), "build dir")
     ("ckon.install_dir", po::value<string>(&ckon_install_dir), "install dir")
-    ("ckon.cppflags", po::value<string>(&ckon_cppflags), "add CPPFLAGS");
+    ("ckon.cppflags", po::value<string>(&ckon_cppflags), "add CPPFLAGS")
+    ("ckon.boost", po::value<string>(&ckon_boost), "boost libraries");
 
   po::options_description userOpts;
   userOpts.add(generic).add(config);
@@ -142,7 +152,6 @@ void cmdline::writeCfgFile() {
   fs::ofstream cfgfile(ckon_config_file);
   Tee tee(cout, cfgfile);
   TeeStream both(tee);
-  both << "boost=" << bBoost << endl;
   both << "suffix=" << bSuffix << endl;
   both << "[ckon]" << endl;
   both << "src_dir=" << ckon_src_dir << endl;
@@ -152,6 +161,7 @@ void cmdline::writeCfgFile() {
   both << "exclSuffix=\"" << ckon_exclSuffix << "\"" << endl;
   both << "NoRootCint=" << ckon_NoRootCint << endl;
   both << "cppflags=\"" << ckon_cppflags << "\"" << endl;
+  both << "boost=\"" << ckon_boost << "\"" << endl;
   both.close();
 }
 
@@ -163,6 +173,14 @@ void cmdline::writeConfigureAc() {
   cfg_ac_str += "m4_ifdef([AM_PROG_AR], [AM_PROG_AR])\n";
   cfg_ac_str += "AM_INIT_AUTOMAKE([-Wall no-define])\n";
   cfg_ac_str += "AC_PROG_CXX\n";
+  if ( !ckon_boost.empty() ) {
+    cfg_ac_str += "AX_BOOST_BASE([1.50])\n";
+    vector<string> boost_libs = utils::split(ckon_boost);
+    BOOST_FOREACH(string s, boost_libs) {
+      boost::to_upper(s);
+      cfg_ac_str += "AX_BOOST_" + s + "\n";
+    }
+  }
   cfg_ac_str += "AM_PROG_LIBTOOL\n";
   cfg_ac_str += "ROOTLIBS=`$ROOTSYS/bin/root-config --libs`\n";
   cfg_ac_str += "ROOTINCLUDES=`$ROOTSYS/bin/root-config --incdir`\n";

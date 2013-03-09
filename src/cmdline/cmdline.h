@@ -32,7 +32,6 @@ class cmdline {
     bool bClean;
     bool bDry;
     bool bSuffix;
-    bool bBoost;
     string nCpu;
     string ckon_config_file;
     string ckon_src_dir;
@@ -43,6 +42,7 @@ class cmdline {
     string ckon_install_dir;
     string ckon_cppflags;
     string ckon_ignore_file;
+    string ckon_boost;
 
     map<string, string> ldadd;
 

@@ -129,11 +129,18 @@ string helpers::writeBinProg(const fs::path& p) {
     out += "bin_" + prog_name + "_LDADD +=" + core_lib_string + '\n';
   out += "bin_" + prog_name;
   out += "_LDADD += -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ @LIBS@\n";
-  if ( mCl->bBoost ) out += "bin_" + prog_name + "_LDADD += -L$(BOOST_LIB)\n";
   out += "bin_" + prog_name + "_LDADD += -ldl -lSpectrum\n";
   if ( mCl->ldadd.find(prog_name) != mCl->ldadd.end() )
     out += "bin_" + prog_name + "_LDADD += " + mCl->ldadd.at(prog_name) + "\n";
   out += "bin_" + prog_name + "_LDFLAGS = -R $(ROOTLIBDIR) -L$(ROOTLIBDIR)\n";
+  if ( !(mCl->ckon_boost).empty() ) {
+    out += "bin_" + prog_name + "_LDFLAGS += $(BOOST_LDFLAGS)\n";
+    vector<string> boost_libs = utils::split(mCl->ckon_boost);
+    BOOST_FOREACH(string s, boost_libs) {
+      boost::to_upper(s);
+      out += "bin_" + prog_name + "_LDFLAGS += $(BOOST_" + s + "_LIB)\n";
+    }
+  }
   out += "bin_" + prog_name + " = @ROOTCFLAGS@\n";
   return out;
 }
@@ -142,7 +149,7 @@ string helpers::writeMakefileAmHd() {
   string out = "AUTOMAKE_OPTIONS = foreign subdir-objects -Wall -Werror\n";
   out += "ROOTINCLUDE = @ROOTINCLUDES@\n";
   out += "AM_CPPFLAGS = -I. -I$(srcdir) -I$(pkgincludedir) ";
-  if ( mCl->bBoost ) out += "-I$(BOOST_INC) ";
+  if ( !(mCl->ckon_boost).empty() ) out += "$(BOOST_CPPFLAGS) ";
   out += "-I$(ROOTINCLUDE)\n";
   return out + "bin_PROGRAMS = \n";
 }

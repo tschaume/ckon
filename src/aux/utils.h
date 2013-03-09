@@ -20,5 +20,6 @@ class utils {
     static char askYesOrNo(const std::string&);
     static bool isEmptyDir(const fs::path&);
     static std::string writeLinkDefHd();
+    static std::vector<std::string> split(const std::string&);
 };
 #endif  // SRC_AUX_UTILS_H_
