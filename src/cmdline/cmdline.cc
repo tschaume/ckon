@@ -40,23 +40,7 @@ void cmdline::runSetup() {
     fs::remove(".autom4te.cfg");
   }
 
-  cout << "write cfgfile" << endl;
-
-  fs::ofstream cfgfile(ckon_config_file);
-  Tee tee(cout, cfgfile);
-  TeeStream both(tee);
-  both << "boost=" << bBoost << endl;
-  both << "suffix=" << bSuffix << endl;
-  both << "[ckon]" << endl;
-  both << "src_dir=" << ckon_src_dir << endl;
-  both << "prog_subdir=" << ckon_prog_subdir << endl;
-  both << "build_dir=" << ckon_build_dir << endl;
-  both << "install_dir=" << ckon_install_dir << endl;
-  both << "exclSuffix=\"" << ckon_exclSuffix << "\"" << endl;
-  both << "NoRootCint=" << ckon_NoRootCint << endl;
-  both << "cppflags=\"" << ckon_cppflags << "\"" << endl;
-  both.close();
-
+  writeCfgFile();
   writeConfigureAc();
   writeAutom4teCfg();
 
@@ -153,6 +137,23 @@ bool cmdline::parse(int argc, char *argv[]) {
   }
 }
 
+void cmdline::writeCfgFile() {
+  fs::ofstream cfgfile(ckon_config_file);
+  Tee tee(cout, cfgfile);
+  TeeStream both(tee);
+  both << "boost=" << bBoost << endl;
+  both << "suffix=" << bSuffix << endl;
+  both << "[ckon]" << endl;
+  both << "src_dir=" << ckon_src_dir << endl;
+  both << "prog_subdir=" << ckon_prog_subdir << endl;
+  both << "build_dir=" << ckon_build_dir << endl;
+  both << "install_dir=" << ckon_install_dir << endl;
+  both << "exclSuffix=\"" << ckon_exclSuffix << "\"" << endl;
+  both << "NoRootCint=" << ckon_NoRootCint << endl;
+  both << "cppflags=\"" << ckon_cppflags << "\"" << endl;
+  both.close();
+}
+
 void cmdline::writeConfigureAc() {
   string cfg_ac_str = "AC_INIT([ana], [0.0])\n";
   cfg_ac_str += "m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])\n";
@@ -187,4 +188,3 @@ void cmdline::writeAutom4teCfg() {
   atmte << atmte_str;
   atmte.close();
 }
-

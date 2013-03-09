@@ -17,6 +17,7 @@ class cmdline {
     string ckon_cmd;
     void purge();
     void runSetup();
+    void writeCfgFile();
     void writeConfigureAc();
     void writeAutom4teCfg();
 
