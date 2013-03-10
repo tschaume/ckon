@@ -150,6 +150,7 @@ system:
 - automake/1.11.4
 - libtool/2.4
 - boost/1.50
+- libcurl/7.27.0
 
 ### License & Project Homepage
 
