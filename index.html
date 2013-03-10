@@ -28,13 +28,20 @@
         </ul>
       </header>
       <section>
-        <p><em>ckon</em> is a C++ program/tool which automatically takes care of
-compilation, dictionary generation and linking of programs and libraries
-developed for data analyses within the <a href="http://root.cern.ch">CERN ROOT analysis
-framework</a>. This includes parsing include headers to
-figure out which libraries the main programs need to be linked to. It uses
+        <p><em>ckon</em> is a C++ program/tool which automatically takes care of compilation,
+dictionary generation and linking of programs and libraries developed for data
+analyses within the <a href="http://root.cern.ch">CERN ROOT analysis framework</a>. This
+includes parsing include headers to figure out which libraries the main programs
+need to be linked to. It uses
 <a href="http://www.gnu.org/software/autoconf/">automake/autoconf</a> to be platform
-independent and GNU install compliant.</p>
+independent and GNU install compliant. In addition, <a href="http://www.gnu.org/software/autoconf-archive/The-Macros.html#The-Macros">m4
+macros</a>
+are automatically downloaded and the according compiler flags included based on
+a list of <a href="http://www.boost.org/">boost</a> libraries provided in the config file.</p>
+
+<h5>Authors and Contributors</h5>
+
+<p>Patrick Huck (<a href="https://github.com/tschaume" class="user-mention">@tschaume</a>)<br><em>invaluable contributions</em>: Hiroshi Masui</p>
 
 <h3>Get the Code &amp; Install</h3>
 
@@ -72,6 +79,8 @@ globally install libraries and programs (i.e. <code>make install</code>):</p>
 <code>ckon clean</code>: make clean</li>
 <li>
 <code>ckon install</code>: make install</li>
+<li>
+<code>ckon dry</code>: only generates Makefiles, no compilation</li>
 </ul><h4>Setup</h4>
 
 <p><code>ckon setup</code> generates the files <em>configure.ac</em> and <em>.autom4te.cfg</em> (both
@@ -99,6 +108,7 @@ ignored/skipped.</p>
   --ckon.build_dir arg   build dir
   --ckon.install_dir arg install dir
   --ckon.cppflags arg    add CPPFLAGS
+  --ckon.boost arg       boost libraries
 
 In addition, unregistered options of the form
 ldadd.prog_name are allowed to use for adding
@@ -117,6 +127,10 @@ following to <em>ckon.cfg</em>.</p>
 genCharmContrib=-lPhysics -lEG -lEGPythia6  # link pythia
 dedxCut=-lRooFit -lRooFitCore -lMinuit      # link roofit
 </code></pre>
+
+<p><code>ckon.boost</code> is set during <code>ckon setup</code> to use and link against specific boost
+libraries. Try not to run rootcint (<code>ckon.NoRootCint</code>) on the library if
+compilation fails.</p>
 
 <p>IMPORTANT note for include directives: For the recursive header scan to work,
 make sure that all C++ and ROOT headers are enclosed in <code>&lt;...&gt;</code>! Only your
@@ -183,14 +197,11 @@ system:</p>
 <li>automake/1.11.4</li>
 <li>libtool/2.4</li>
 <li>boost/1.50</li>
+<li>libcurl/7.27.0</li>
 </ul><h3>License &amp; Project Homepage</h3>
 
 <p><em>ckon</em> is published under MIT License (<a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>).<br>
 Find the project page at <a href="http://tschaume.github.com/ckon">http://tschaume.github.com/ckon</a></p>
-
-<h3>Authors and Contributors</h3>
-
-<p>Patrick Huck (<a href="https://github.com/tschaume" class="user-mention">@tschaume</a>)<br><em>invaluable contributions</em>: Hiroshi Masui</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/tschaume">tschaume</a></p>
