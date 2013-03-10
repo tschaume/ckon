@@ -20,6 +20,7 @@ class cmdline {
     void writeCfgFile();
     void writeConfigureAc();
     void writeAutom4teCfg();
+    static size_t writeM4File(void *, size_t, size_t, FILE*);
 
   public:
     cmdline();

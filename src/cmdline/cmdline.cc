@@ -6,6 +6,7 @@
 #include <boost/iostreams/tee.hpp>
 #include <boost/algorithm/string.hpp>
 #include <curl/curl.h>
+#include <cstdio>
 #include "src/clean/clean.h"
 #include "src/aux/utils.h"
 
@@ -32,6 +33,10 @@ void cmdline::purge() {
   printf("%d files removed.\n", clcont.purge());
 }
 
+size_t cmdline::writeM4File(void *ptr, size_t size, size_t nm, FILE *stream) {
+  return fwrite(ptr, size, nm, stream);
+}
+
 void cmdline::runSetup() {
   if ( fs::exists(ckon_config_file) || fs::exists("configure.ac") ) {
     cout << ckon_config_file << " or configure.ac already exist(s)!" << endl;
@@ -48,11 +53,16 @@ void cmdline::runSetup() {
     curl_global_init(CURL_GLOBAL_ALL);
     CURL* curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-    //curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback); // later
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeM4File);
     vector<string> boost_libs = utils::split(ckon_boost);
     boost_libs.push_back("base");
+    if ( !fs::exists("m4") ) fs::create_directory("m4");
     BOOST_FOREACH(string s, boost_libs) {
       curl_easy_setopt(curl, CURLOPT_URL, utils::getM4Url(s).c_str());
+      string fn = "m4/ax_boost_" + s + ".m4";
+      if ( fs::exists(fn) ) continue;
+      FILE* file = fopen(fn.c_str(),"wb");
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
       curl_easy_perform(curl);
     }
     curl_easy_cleanup(curl);
