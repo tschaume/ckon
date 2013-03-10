@@ -1,10 +1,17 @@
-*ckon* is a C++ program/tool which automatically takes care of
-compilation, dictionary generation and linking of programs and libraries
-developed for data analyses within the [CERN ROOT analysis
-framework](http://root.cern.ch). This includes parsing include headers to
-figure out which libraries the main programs need to be linked to. It uses
+*ckon* is a C++ program/tool which automatically takes care of compilation,
+dictionary generation and linking of programs and libraries developed for data
+analyses within the [CERN ROOT analysis framework](http://root.cern.ch). This
+includes parsing include headers to figure out which libraries the main programs
+need to be linked to. It uses
 [automake/autoconf](http://www.gnu.org/software/autoconf/) to be platform
-independent and GNU install compliant.
+independent and GNU install compliant. In addition, [m4
+macros](http://www.gnu.org/software/autoconf-archive/The-Macros.html#The-Macros)
+are automatically downloaded and the according compiler flags included based on
+a list of [boost](http://www.boost.org/) libraries provided in the config file.
+
+##### Authors and Contributors
+Patrick Huck (@tschaume)  
+*invaluable contributions*: Hiroshi Masui
 
 ### Get the Code & Install
 
@@ -37,6 +44,7 @@ globally install libraries and programs (i.e. ```make install```):
 - ```ckon```: compile
 - ```ckon clean```: make clean
 - ```ckon install```: make install
+- ```ckon dry```: only generates Makefiles, no compilation
 
 #### Setup
 ```ckon setup``` generates the files *configure.ac* and *.autom4te.cfg* (both
@@ -64,6 +72,7 @@ Configuration:
   --ckon.build_dir arg   build dir
   --ckon.install_dir arg install dir
   --ckon.cppflags arg    add CPPFLAGS
+  --ckon.boost arg       boost libraries
 
 In addition, unregistered options of the form
 ldadd.prog_name are allowed to use for adding
@@ -83,6 +92,10 @@ following to *ckon.cfg*.
 genCharmContrib=-lPhysics -lEG -lEGPythia6  # link pythia
 dedxCut=-lRooFit -lRooFitCore -lMinuit      # link roofit
 ```
+
+`ckon.boost` is set during `ckon setup` to use and link against specific boost
+libraries. Try not to run rootcint (`ckon.NoRootCint`) on the library if
+compilation fails.
 
 IMPORTANT note for include directives: For the recursive header scan to work,
 make sure that all C++ and ROOT headers are enclosed in ```<...>```! Only your
@@ -156,7 +169,3 @@ system:
 
 *ckon* is published under MIT License (http://opensource.org/licenses/MIT).  
 Find the project page at http://tschaume.github.com/ckon
-
-### Authors and Contributors
-Patrick Huck (@tschaume)  
-*invaluable contributions*: Hiroshi Masui
