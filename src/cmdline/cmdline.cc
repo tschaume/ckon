@@ -21,10 +21,10 @@ typedef io::tee_device<ostream, fs::ofstream> Tee;
 typedef io::stream<Tee> TeeStream;
 
 cmdline::cmdline()
-: ckon_cmd(""), nCpu("1"), ckon_config_file("ckon.cfg"), ckon_src_dir("StRoot"),
-  ckon_exclSuffix("Gnuplot Options"), ckon_NoRootCint("YamlCpp"),
-  ckon_prog_subdir("programs"), ckon_build_dir("build"),
-  ckon_install_dir("build"), ckon_cppflags("-Wall"),
+: ckon_cmd(""), bYaml(false), nCpu("1"), ckon_config_file("ckon.cfg"),
+  ckon_src_dir("StRoot"), ckon_exclSuffix("Gnuplot Options"),
+  ckon_NoRootCint("YamlCpp"), ckon_prog_subdir("programs"),
+  ckon_build_dir("build"), ckon_install_dir("build"), ckon_cppflags("-Wall"),
   ckon_ignore_file("ckonignore"), ckon_boost("")
 { }
 
@@ -71,6 +71,23 @@ void cmdline::runSetup() {
     cout << "re-run setup after adding boost libraries in ckon.cfg!" << endl;
   }
 
+  if ( utils::askYesOrNo("are you going to use yaml") == 'y' ) {
+    bYaml = true;
+    string fn = "m4/yaml.m4";
+    if ( !fs::exists(fn) ) {
+      CURL* curl = curl_easy_init();
+      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeM4File);
+      if ( !fs::exists("m4") ) fs::create_directory("m4");
+      string u = "http://libtmrm.googlecode.com/svn/trunk/m4/yaml.m4";
+      curl_easy_setopt(curl, CURLOPT_URL, u.c_str());
+      FILE* file = fopen(fn.c_str(),"wb");
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
+      curl_easy_perform(curl);
+      curl_easy_cleanup(curl);
+    }
+  }
+
   writeCfgFile();
   writeConfigureAc();
   writeAutom4teCfg();
@@ -89,6 +106,7 @@ bool cmdline::parse(int argc, char *argv[]) {
   po::options_description config("Configuration");
   config.add_options()
     ("suffix,s", po::value<bool>(&bSuffix), "add suffix + in LinkDef.h (bool)")
+    ("yaml,y", po::value<bool>(&bYaml), "use yaml")
     ("ckon.src_dir", po::value<string>(&ckon_src_dir), "source dir")
     ("ckon.exclSuffix", po::value<string>(&ckon_exclSuffix), "no + suffix")
     ("ckon.NoRootCint", po::value<string>(&ckon_NoRootCint), "no dictionary")
@@ -174,6 +192,7 @@ void cmdline::writeCfgFile() {
   Tee tee(cout, cfgfile);
   TeeStream both(tee);
   both << "suffix=" << bSuffix << endl;
+  both << "yaml=" << bYaml << endl;
   both << "[ckon]" << endl;
   both << "src_dir=" << ckon_src_dir << endl;
   both << "prog_subdir=" << ckon_prog_subdir << endl;
@@ -202,6 +221,7 @@ void cmdline::writeConfigureAc() {
       cfg_ac_str += "AX_BOOST_" + s + "\n";
     }
   }
+  if ( bYaml ) cfg_ac_str += "YAML_REQUIRE\n";
   cfg_ac_str += "AM_PROG_LIBTOOL\n";
   cfg_ac_str += "ROOTLIBS=`$ROOTSYS/bin/root-config --libs`\n";
   cfg_ac_str += "ROOTINCLUDES=`$ROOTSYS/bin/root-config --incdir`\n";

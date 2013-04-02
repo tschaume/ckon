@@ -33,6 +33,7 @@ class cmdline {
     bool bClean;
     bool bDry;
     bool bSuffix;
+    bool bYaml;
     string nCpu;
     string ckon_config_file;
     string ckon_src_dir;
