@@ -19,12 +19,14 @@ include headers to figure out which libraries the main programs need to be
 linked to. It uses `automake/autoconf`_ to be platform independent and GNU
 install compliant. In addition, `m4 macros`_ are automatically downloaded and
 the according compiler flags included based on a list of `boost`_ libraries
-provided in the config file.
+provided in the config file.  For the purpose of YAML database usage, a m4
+macro can be downloaded during setup to link against the `yaml-cpp`_ library.
 
 .. _CERN ROOT: http://root.cern.ch
 .. _automake/autoconf: http://www.gnu.org/software/autoconf/
 .. _m4 macros: http://www.gnu.org/software/autoconf-archive/The-Macros.html#The-Macros
 .. _boost: http://www.boost.org/
+.. _yaml-cpp: https://code.google.com/p/yaml-cpp/
 
 
 Authors and Contributors
@@ -138,6 +140,16 @@ respectively, by adding the following to *ckon.cfg*.::
 ``ckon.boost`` is set during ``ckon setup`` to use and link against specific boost
 libraries. Try not to run rootcint (``ckon.NoRootCint``) on the library if
 compilation fails.
+
+.. NOTE::
+   ckon version 0.4 now allows for the automatic download of a ``yaml.m4``
+   macro during ``ckon setup`` to link against the `yaml-cpp`_ library. Please
+   submit an `issue`_ if the macro doesn't find the library after you installed
+   it. This added functionality shouldn't break anything if you choose not to use
+   YAML during ``ckon setup``.
+
+.. _yaml-cpp: https://code.google.com/p/yaml-cpp/
+.. _issue: https://github.com/tschaume/ckon/issues
 
 .. WARNING::
    For the recursive header scan to work, make sure that all include directives
