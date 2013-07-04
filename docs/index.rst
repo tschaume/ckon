@@ -108,7 +108,7 @@ ignored/skipped.::
    
    Configuration:
      -s [ --suffix ] arg    add suffix + in LinkDef.h (bool)
-     -b [ --boost ] arg     include BOOST_INC/BOOST_LIB (bool)
+     -y [ --yaml ] arg      use yaml
      --ckon.src_dir arg     source dir
      --ckon.exclSuffix arg  no + suffix
      --ckon.NoRootCint arg  no dictionary
