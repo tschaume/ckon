@@ -141,6 +141,9 @@ string helpers::writeBinProg(const fs::path& p) {
       out += "bin_" + prog_name + "_LDFLAGS += $(BOOST_" + s + "_LIB)\n";
     }
   }
+  if ( mCl->bYaml ) {
+    out += "bin_" + prog_name + "_LDFLAGS += $(YAML_LDFLAGS)\n";
+  }
   out += "bin_" + prog_name + " = @ROOTCFLAGS@\n";
   return out;
 }
@@ -151,6 +154,7 @@ string helpers::writeMakefileAmHd() {
   out += "ROOTINCLUDE = @ROOTINCLUDES@\n";
   out += "AM_CPPFLAGS = -I. -I$(srcdir) -I$(pkgincludedir) ";
   if ( !(mCl->ckon_boost).empty() ) out += "$(BOOST_CPPFLAGS) ";
+  if ( mCl->bYaml ) out += "$(YAML_CPPFLAGS) ";
   out += "-I$(ROOTINCLUDE)\n";
   return out + "bin_PROGRAMS = \n";
 }
