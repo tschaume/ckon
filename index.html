@@ -35,24 +35,20 @@
 <p><em>ckon</em> is a C++ program/tool which automatically takes care of compilation,
 dictionary generation and linking of programs and libraries developed for data
 analyses within the <a href="http://root.cern.ch">CERN ROOT analysis framework</a>. This
-includes parsing include headers to figure out which libraries the main programs
-need to be linked to. It uses
+includes parsing include headers to figure out which libraries the main
+programs need to be linked to. It uses
 <a href="http://www.gnu.org/software/autoconf/">automake/autoconf</a> to be platform
 independent and GNU install compliant. In addition, <a href="http://www.gnu.org/software/autoconf-archive/The-Macros.html#The-Macros">m4
 macros</a>
 are automatically downloaded and the according compiler flags included based on
-a list of <a href="http://www.boost.org/">boost</a> libraries provided in the config file.</p>
+a list of <a href="http://www.boost.org/">boost</a> libraries provided in the config file.
+For the purpose of YAML database usage, a m4 macro can be downloaded during
+setup to link against the <a href="https://code.google.com/p/yaml-cpp/">yaml-cpp</a>
+library.</p>
 
-<h4>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h4>
+<p><em>ckon</em> is published under MIT License (<a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>).  </p>
 
 <p>Patrick Huck (<a href="https://github.com/tschaume" class="user-mention">@tschaume</a>)<br><em>invaluable contributions</em>: Hiroshi Masui</p>
-
-<h4>
-<a name="license--project-homepage" class="anchor" href="#license--project-homepage"><span class="octicon octicon-link"></span></a>License &amp; Project Homepage</h4>
-
-<p><em>ckon</em> is published under MIT License (<a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>).<br>
-Find the project page at <a href="http://tschaume.github.com/ckon">http://tschaume.github.com/ckon</a></p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/tschaume">tschaume</a></p>
