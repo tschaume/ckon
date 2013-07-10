@@ -169,37 +169,37 @@ based on the contents and timestamps in the ``ckon.src_dir`` directory.
 A typical directory structure could look as follows - using the current
 defaults for illustration purposes.::
    
-   StRoot
-   ├── ElectronPid
-   │   ├── BetaPanels.cxx
-   │   ├── BetaPanels.h
-   │   ├── PureSampleAnalysis.cxx
-   │   ├── PureSampleAnalysis.h
-   │   ├── SigmaElFitsMaker.cxx
-   │   ├── SigmaElFitsMaker.h
-   │   ├── SigmaElFitsPlotter.cxx
-   │   ├── SigmaElFitsPlotter.h
-   │   ├── SigmaElFitsUtils.cxx
-   │   ├── SigmaElFitsUtils.h
-   │   └── programs
-   │       ├── README
-   │       ├── beta3sig.cc
-   │       ├── dedxCut.cc
-   │       ├── nsigparamsGP.cc
-   │       └── pureSamp.cc
-   ├── StBadRdosDb
-   │   ├── StBadRdosDb.cxx
-   │   ├── StBadRdosDb.h
-   │   ├── database
-   │   │   ├── dbfiles
-   │   │   ├── genAll.sh
-   │   │   └── genBadRdosDb.pl
-   │   └── macros
-   │       └── testStBadRdosDb.C
-   ├── YamlCfgReader
-   │   ├── YamlCfgReader.cxx
-   │   ├── YamlCfgReader.h
-   │   └── config.yml
+   StRoot/
+       ElectronPid/
+           BetaPanels.cxx
+           BetaPanels.h
+           PureSampleAnalysis.cxx
+           PureSampleAnalysis.h
+           SigmaElFitsMaker.cxx
+           SigmaElFitsMaker.h
+           SigmaElFitsPlotter.cxx
+           SigmaElFitsPlotter.h
+           SigmaElFitsUtils.cxx
+           SigmaElFitsUtils.h
+           programs/
+               README
+               beta3sig.cc
+               dedxCut.cc
+               nsigparamsGP.cc
+               pureSamp.cc
+       StBadRdosDb/
+           StBadRdosDb.cxx
+           StBadRdosDb.h
+           database/
+               dbfiles
+               genAll.sh
+               genBadRdosDb.pl
+           macros/
+               testStBadRdosDb.C
+       YamlCfgReader/
+           YamlCfgReader.cxx
+           YamlCfgReader.h
+           config.yml
    ...
    
 Index and Search
