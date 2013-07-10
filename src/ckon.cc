@@ -25,6 +25,14 @@ int main(int argc, char *argv[]) {
     cmdline* clopts = new cmdline();
     if ( !clopts->parse(argc, argv) ) return 0;
 
+    // check whether 'ckon_config_file' and 'configure.ac' exist
+    // if not user needs to run `ckon setup` first
+    if ( clopts->noSetup() ) {
+      cout << "please run `ckon setup` first and check ";
+      cout << clopts->ckon_config_file << endl;
+      return 0;
+    }
+
     // init helpers w/ command line options
     helpers* hlp = new helpers(clopts);
 

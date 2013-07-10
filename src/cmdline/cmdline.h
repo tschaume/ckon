@@ -51,5 +51,6 @@ class cmdline {
     vector<string> ckon_vign;
 
     bool parse(int argc, char *argv[]);
+    bool noSetup();
 };
 #endif  // SRC_CMDLINE_CMDLINE_H_

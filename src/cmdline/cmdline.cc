@@ -37,6 +37,10 @@ size_t cmdline::writeM4File(void *ptr, size_t size, size_t nm, FILE *stream) {
   return fwrite(ptr, size, nm, stream);
 }
 
+bool cmdline::noSetup() {
+  return !fs::exists(ckon_config_file) && !fs::exists("configure.ac");
+}
+
 void cmdline::runSetup() {
   if ( fs::exists(ckon_config_file) || fs::exists("configure.ac") ) {
     cout << ckon_config_file << " or configure.ac already exist(s)!" << endl;
