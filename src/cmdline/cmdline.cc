@@ -46,6 +46,8 @@ void cmdline::runSetup() {
     fs::remove(".autom4te.cfg");
   }
 
+  if ( !fs::exists("m4") ) fs::create_directory("m4");
+
   if ( utils::askYesOrNo("are you going to use boost") == 'y' ) {
     cout << "space-separate list of boost library names:" << endl;
     std::getline(std::cin, ckon_boost);
@@ -56,7 +58,6 @@ void cmdline::runSetup() {
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeM4File);
     vector<string> boost_libs = utils::split(ckon_boost);
     boost_libs.push_back("base");
-    if ( !fs::exists("m4") ) fs::create_directory("m4");
     BOOST_FOREACH(string s, boost_libs) {
       curl_easy_setopt(curl, CURLOPT_URL, utils::getM4Url(s).c_str());
       string fn = "m4/ax_boost_" + s + ".m4";
