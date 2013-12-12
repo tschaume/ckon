@@ -87,6 +87,7 @@ void cmdline::runSetup() {
       if ( !fs::exists("m4") ) fs::create_directory("m4");
       //string u = "http://libtmrm.googlecode.com/svn/trunk/m4/yaml.m4";
       string u = "https://raw.github.com/tschaume/ckon/master/m4/yaml.m4";
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
       curl_easy_setopt(curl, CURLOPT_URL, u.c_str());
       FILE* file = fopen(fn.c_str(),"wb");
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
