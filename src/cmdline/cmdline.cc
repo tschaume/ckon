@@ -63,7 +63,8 @@ void cmdline::runSetup() {
     vector<string> boost_libs = utils::split(ckon_boost);
     boost_libs.push_back("base");
     BOOST_FOREACH(string s, boost_libs) {
-      curl_easy_setopt(curl, CURLOPT_URL, utils::getM4Url(s).c_str());
+      string m4url = utils::getM4Url(s);
+      curl_easy_setopt(curl, CURLOPT_URL, m4url.c_str());
       string fn = "m4/ax_boost_" + s + ".m4";
       if ( fs::exists(fn) ) continue;
       FILE* file = fopen(fn.c_str(),"wb");
