@@ -1,4 +1,4 @@
-AC_INIT([ckon], [0.0])
+AC_INIT([ckon], [0.6.3])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CONFIG_AUX_DIR(config)
 m4_pattern_allow([AM_PROG_AR])

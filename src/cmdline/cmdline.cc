@@ -107,6 +107,7 @@ bool cmdline::parse(int argc, char *argv[]) {
   po::options_description generic("Generic Options");
   generic.add_options()
     ("help,h", po::bool_switch(&bHelp), "show this help")
+    ("version", po::bool_switch(&bVersion), "print version number")
     ("verbose,v", po::bool_switch(&bVerbose), "verbose output")
     (",j", po::value<string>(&nCpu), "call make w/ -j <#cores>")
     ("ckon_cmd", po::value<string>(&ckon_cmd), "setup | clean | install | dry");
@@ -165,13 +166,18 @@ bool cmdline::parse(int argc, char *argv[]) {
     po::notify(vm);  // throws on error
 
     if ( bHelp ) {  // --help option
-      cout << "ckon -- automatic ROOT analyses compiler & linker" << endl;
+      cout << "ckon -- automatic build tool for ROOT" << endl;
       cout << userOpts << endl;
       cout << "\nIn addition, unregistered options of the form";
       cout << "\nldadd.prog_name are allowed to use for adding";
       cout << "\nLDFLAGS to the linker of specific programs. The";
       cout << "\ngiven string/value is added verbatim in LDADD.";
       cout << "\nUnregistered options are only allowed in ckon.cfg\n";
+      return false;
+    }
+
+    if ( bVersion ) { // --version option
+      cout << PACKAGE_VERSION << endl;
       return false;
     }
 

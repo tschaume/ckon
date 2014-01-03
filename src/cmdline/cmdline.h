@@ -27,6 +27,7 @@ class cmdline {
     virtual ~cmdline() {}
 
     bool bHelp;
+    bool bVersion;
     bool bVerbose;
     bool bInstall;
     bool bSetup;
