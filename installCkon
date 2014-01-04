@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -ge 1 ]; then
+if [ $# -ge 0 ]; then
 
   if [ $# -ge 3 ]; then
     echo "too many arguments."
@@ -8,9 +8,11 @@ if [ $# -ge 1 ]; then
     exit
   fi
 
+  prefix=$PWD
+  [ $# -ge 1 ] && prefix=$1
   nCpu=1
-  if [ $# -eq 2 ]; then nCpu=$2; fi
-  prefix=$1
+  [ $# -eq 2 ] && nCpu=$2
+  echo "using prefix $prefix and $nCpu CPU(s)"
 
   ./autogen.sh
   autoreconf -v --force --install -Wall
@@ -26,7 +28,7 @@ if [ $# -ge 1 ]; then
   echo "===> ckon build done."
 
 else
-  echo "usage: $0 prefix [nCpu]"
-  echo "prefix = install dir"
+  echo "usage: $0 [prefix [nCpu]]"
+  echo 'prefix = install dir [default=$PWD]'
   echo "nCpu = #cpu's for parallel build (-j) [default=1]"
 fi
