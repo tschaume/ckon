@@ -1,14 +1,14 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects -Wall
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 AM_CPPFLAGS = $(BOOST_CPPFLAGS)
-AM_CPPFLAGS += @LIBCURL_CPPFLAGS@
+AM_CPPFLAGS += $(CURL_CFLAGS)
 bin_PROGRAMS = ckon
 ckon_LDADD = $(BOOST_LDFLAGS) -lstdc++
 ckon_LDADD += $(BOOST_SYSTEM_LIB)
 ckon_LDADD += $(BOOST_FILESYSTEM_LIB)
 ckon_LDADD += $(BOOST_REGEX_LIB)
 ckon_LDADD += $(BOOST_PROGRAM_OPTIONS_LIB)
-ckon_LDADD += @LIBCURL@
+ckon_LDADD += $(CURL_LIBS)
 ckon_SOURCES =
 ckon_SOURCES += ./src/aux/myregex.cc
 ckon_SOURCES += ./src/aux/myregex.h

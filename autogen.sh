@@ -2,7 +2,7 @@
 
 VERSION=0.6.3
 MIN_BOOST_VERSION=1.50
-MIN_CURL_VERSION=
+MIN_CURL_VERSION=7.34.0
 
 [ -e configure.ac ] && rm -v configure.ac
 
