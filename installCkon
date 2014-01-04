@@ -13,7 +13,7 @@ if [ $# -ge 1 ]; then
   prefix=$1
 
   ./autogen.sh
-  autoreconf --force --install
+  autoreconf -v --force --install -Wall
 
   mkdir -v build
   cd build
