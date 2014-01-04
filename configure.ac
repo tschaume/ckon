@@ -1,7 +1,7 @@
 AC_INIT([ckon], [0.6.3])
+AC_CONFIG_MACRO_DIR([m4])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CONFIG_AUX_DIR(config)
-m4_pattern_allow([AM_PROG_AR])
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AM_INIT_AUTOMAKE([-Wall no-define])
 AC_PROG_CXX
@@ -10,9 +10,6 @@ AX_BOOST_SYSTEM
 AX_BOOST_FILESYSTEM
 AX_BOOST_REGEX
 AX_BOOST_PROGRAM_OPTIONS
-LIBCURL_CHECK_CONFIG
-AX_LIB_CURL([7.34.0],,[
-  AC_MSG_ERROR([You need libcurl >= 7.34.0])
-])
+AX_LIB_CURL([7.34.0],,AC_MSG_ERROR([You need libcurl >= 7.34.0]))
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
