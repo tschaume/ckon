@@ -11,3 +11,6 @@
 *.lai
 *.la
 *.a
+
+docs/_build
+pepper_out
