@@ -19,8 +19,10 @@ if [ $# -ge 0 ]; then
 
   mkdir -v build
   cd build
-  # BOOST_ROOT set by `module load boost/1.54.0 in ~/.login works
-  boostopts="--with-boost=$BOOST_ROOT --with-boost-filesystem --with-boost-system"
+  # BOOST_ROOT set by `module load boost/1.54.0` in ~/.login works on PDSF
+  boostopts='--with-boost'
+  [ ! -z $BOOST_ROOT ] && boostopts=$boostopts"=$BOOST_ROOT"
+  boostopts=$boostopts' --with-boost-filesystem --with-boost-system'
   boostopts=$boostopts' --with-boost-regex --with-boost-program-options'
   ../configure --prefix=$prefix $boostopts
   make -j $nCpu CXXFLAGS="-Wall -Werror"
