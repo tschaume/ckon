@@ -147,8 +147,7 @@ int main(int argc, char *argv[]) {
       string config_call = "../configure --prefix=" + prefix.string();
       if ( !clopts->ckon_boost.empty() ) {
 	config_call += " --with-boost";
-	// TODO: fix for explicit $BOOST_ROOT -> check for env $BOOST_ROOT
-	// config_call += "=$BOOST_ROOT";
+	if ( getenv("BOOST_ROOT") != NULL ) { config_call += "=$BOOST_ROOT"; }
 	vector<string> boost_libs = utils::split(clopts->ckon_boost);
 	BOOST_FOREACH(string s, boost_libs) {
 	  boost::replace_all(s, "_", "-");
