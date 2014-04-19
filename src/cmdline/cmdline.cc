@@ -237,10 +237,10 @@ void cmdline::writeConfigureAc() {
   }
   if ( bYaml ) cfg_ac_str += "YAML_REQUIRE\n";
   cfg_ac_str += "AM_PROG_LIBTOOL\n";
-  cfg_ac_str += "ROOTLIBS=`$ROOTSYS/bin/root-config --libs`\n";
-  cfg_ac_str += "ROOTINCLUDES=`$ROOTSYS/bin/root-config --incdir`\n";
-  cfg_ac_str += "ROOTLIBDIR=`$ROOTSYS/bin/root-config --libdir`\n";
-  cfg_ac_str += "ROOTGLIBS=`$ROOTSYS/bin/root-config --glibs`\n";
+  cfg_ac_str += "ROOTLIBS=`$(which root-config) --libs`\n";
+  cfg_ac_str += "ROOTINCLUDES=`$(which root-config) --incdir`\n";
+  cfg_ac_str += "ROOTLIBDIR=`$(which root-config) --libdir`\n";
+  cfg_ac_str += "ROOTGLIBS=`$(which root-config) --glibs`\n";
   cfg_ac_str += "AC_SUBST(ROOTLIBS)\n";
   cfg_ac_str += "AC_SUBST(ROOTINCLUDES)\n";
   cfg_ac_str += "AC_SUBST(ROOTGLIBS)\n";
