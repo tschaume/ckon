@@ -1,5 +1,6 @@
 // Copyright (c) 2013 Patrick Huck
 #include "src/clean/clean.h"
+#include <iostream>
 
 clean::clean(const std::string& src_dir) {
   fs::recursive_directory_iterator dir_end;

@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 #include <boost/range/sub_range.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <iostream>
 #include "src/cmdline/cmdline.h"
 #include "src/aux/myregex.h"
 #include "src/aux/utils.h"

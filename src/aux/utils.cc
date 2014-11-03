@@ -2,6 +2,7 @@
 #include "src/aux/utils.h"
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
+#include <iostream>
 #include "src/cmdline/cmdline.h"
 
 utils::utils() {}

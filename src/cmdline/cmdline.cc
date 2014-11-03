@@ -5,6 +5,7 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/tee.hpp>
 #include <boost/algorithm/string.hpp>
+#include <iostream>
 #include <curl/curl.h>
 #include <cstdio>
 #include "src/clean/clean.h"
