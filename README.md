@@ -1,7 +1,7 @@
 Please find the docs at https://ckon.readthedocs.org
 ----------------------------------------------------
 
-[![DOI Badge](doi_badge.png)](http://dx.doi.org/10.5281/zenodo.10434)
+[![DOI](https://zenodo.org/badge/4568/tschaume/ckon.png)](http://dx.doi.org/10.5281/zenodo.12533)
 
 *ckon* is a C++ program/tool which automatically takes care of compilation,
 dictionary generation and linking of programs and libraries developed for data
