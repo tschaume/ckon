@@ -10,58 +10,67 @@
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
   </head>
   <body>
     <div class="wrapper">
       <header>
         <h1 class="header">ckon</h1>
         <p class="header">automatic build tool for C++ software written in the data analysis framework ROOT</p>
-
         <ul>
           <li class="download"><a class="buttons" href="https://github.com/tschaume/ckon/zipball/master">Download ZIP</a></li>
           <li class="download"><a class="buttons" href="https://github.com/tschaume/ckon/tarball/master">Download TAR</a></li>
           <li><a class="buttons github" href="https://github.com/tschaume/ckon">View On GitHub</a></li>
         </ul>
-
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/tschaume">tschaume</a></p>
-
-
+        <p class="header">maintained by <a class="header name" href="https://github.com/tschaume">tschaume</a></p>
       </header>
+
       <section>
         <p><em>ckon</em> is a C++ program/tool which automatically takes care of compilation,
-dictionary generation and linking of programs and libraries developed for data
-analyses within the <a href="http://root.cern.ch">CERN ROOT analysis framework</a>. This
-includes parsing include headers to figure out which libraries the main
-programs need to be linked to. It uses
-<a href="http://www.gnu.org/software/autoconf/">automake/autoconf</a> to be platform
-independent and GNU install compliant. In addition, <a href="http://www.gnu.org/software/autoconf-archive/The-Macros.html#The-Macros">m4
-macros</a>
-are automatically downloaded and the according compiler flags included based on
-a list of <a href="http://www.boost.org/">boost</a> libraries provided in the config file.
-For the purpose of YAML database usage, a m4 macro can be downloaded during
-setup to link against the <a href="https://code.google.com/p/yaml-cpp/">yaml-cpp</a>
-library.</p>
+        dictionary generation and linking of programs and libraries developed for data
+        analyses within the <a href="http://root.cern.ch">CERN ROOT analysis framework</a>. This
+        includes parsing include headers to figure out which libraries the main
+        programs need to be linked to. It uses
+        <a href="http://www.gnu.org/software/autoconf/">automake/autoconf</a> to be platform
+        independent and GNU install compliant. In addition, <a href="http://www.gnu.org/software/autoconf-archive/The-Macros.html#The-Macros">m4
+          macros</a>
+        are automatically downloaded and the according compiler flags included based on
+        a list of <a href="http://www.boost.org/">boost</a> libraries provided in the config file.
+        For the purpose of YAML database usage, a m4 macro can be downloaded during
+        setup to link against the <a href="https://code.google.com/p/yaml-cpp/">yaml-cpp</a>
+        library.</p>
 
-<p>Patrick Huck (<a href="http://www.linkedin.com/in/tschaume/">@tschaume</a>)<br>
-<em>invaluable contributions</em> to bash/perl based predecessor: Hiroshi Masui.<br>
-<em>ckon</em> is published under <a href="http://opensource.org/licenses/MIT">MIT License</a>. 
-<strong>Please find the docs at <a href="https://ckon.readthedocs.org">https://ckon.readthedocs.org</a></strong></p>
+        <p>Patrick Huck (<a href="http://www.linkedin.com/in/tschaume/">@tschaume</a>)<br>
+        <em>invaluable contributions</em> to bash/perl based predecessor: Hiroshi Masui.<br>
+        <em>ckon</em> is published under <a href="http://opensource.org/licenses/MIT">MIT License</a>.<br>
+        <strong>Please find the docs at <a href="https://ckon.readthedocs.org">https://ckon.readthedocs.org</a></strong></p>
 
-<h3>
-<a name="quick-install" class="anchor" href="#quick-install"><span class="octicon octicon-link"></span></a>quick install</h3>
+        <h3>
+          <a name="quick-install" class="anchor" href="#quick-install"><span class="octicon octicon-link"></span></a>
+          quick install
+        </h3>
 
-<pre><code>git clone git@github.com:tschaume/ckon.git
+        <p>
+        Homebrew:
+        <pre><code>brew install [--head] ckon</code></pre>
+        OR <br>
+        MacPorts:
+        <pre><code>port install ckon</code></pre>
+        OR <br>
+        Manually from source:
+        <pre><code>git clone git@github.com:tschaume/ckon.git
 cd ckon; ./installCkon &lt;install-path&gt;
 # replace &lt;install-path&gt; with an install path in your $PATH
-</code></pre>
+        </code></pre>
+        </p>
+
       </section>
       <footer>
         <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
+
   </body>
 </html>
