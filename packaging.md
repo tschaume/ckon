@@ -29,4 +29,6 @@ dput mentors-ftp ckon_<version>-<rev>_amd64.changes
 # https://mentors.debian.net/packages/my
 # https://github.com/tschaume/ckon-deb-pkg/releases
 # http://anonscm.debian.org/cgit/blends/projects/science.git/ -> Suggests: ckon
+# https://tracker.debian.org/pkg/ckon -> links to build logs, bug reports, ubuntu pkg, news etc.
+# add list entry at https://wiki.debian.org/DebianPureBlends/SoB
 ```
