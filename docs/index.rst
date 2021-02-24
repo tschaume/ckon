@@ -36,7 +36,7 @@ Authors and Contributors
 
 License & Project Homepage
   | *ckon* is published under `MIT License`_.  
-  | Find the project page at http://tschaume.github.com/ckon
+  | Find the project page at http://tschaume.github.io/ckon
 
 Software Requirements
   * m4/1.4.6
